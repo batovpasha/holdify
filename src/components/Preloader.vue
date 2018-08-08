@@ -27,14 +27,14 @@ export default {
   },
   methods: {
     fade () {
-      window.document.body.onload = () => {
-        window.setTimeout(()=>{
-          this.$router.push('/game')
-        }, 1000)
-      }
-      // window.setTimeout(() => {
-      //   this.$router.push('/game')
-      // }, 5000)
+      // window.document.body.onload = () => {
+      //   window.setTimeout(()=>{
+      //     this.$router.push('/game')
+      //   }, 1000)
+      // }
+      window.setTimeout(() => {
+        this.$router.push('/game')
+      }, 3000)
     },
     loading () {
       window.setTimeout(() => {
@@ -64,7 +64,7 @@ export default {
 <style lang='sass' scoped>
 .main
   overflow: hidden
-  background: #2e2e2e
+  background: #2b2b2b
   position: absolute
   width: 100%
   height: 100%
@@ -98,6 +98,16 @@ export default {
       font-size: 8vw
       margin-top: 3%
       margin-bottom: 0
+      &:before
+        content: ''
+        position: absolute
+        width: 10vw
+        height: 8vw
+        left: 24%
+        background: url('../assets/media/logo.png')
+        background-position: center
+        background-size: cover
+
     p
       margin-top: 1%
       font-family: 'Raleway', sans-serif
