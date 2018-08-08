@@ -30,7 +30,6 @@
         <input class="field-right" type="text" name="" value="">
 
       </div>
-
       <div class="col field">
         <div class="field-left">
           Ставка
