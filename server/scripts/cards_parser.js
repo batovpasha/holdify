@@ -36,8 +36,19 @@ const createCards = (hand, table) => { // hand and table are arrays of cards(obj
   }
 
   if (!tableCards.length) // if no cards on table then it is a preflop
-    preflop.generateDecision(handCards);
+    console.log(preflop.generateDecision(handCards));
+
+  /*
+  else if (tableCards.length === 3)
+    console.log(flop.generateDecision(handCards, tableCards));
+
+  else if (tableCards.length === 4)
+    console.log(turn.generateDecision(handCards, tableCards));
+
+  else if (tableCards.length === 3)
+    console.log(river.generateDecision(handCards, tableCards));
+  */
 }
 
-createCards([{ suit: 'clubs', rank: 'K' }, { suit: 'diamonds', rank: 'A' }],
+createCards([{ suit: 'clubs', rank: 9 }, { suit: 'diamonds', rank: 'A' }],
             []);
