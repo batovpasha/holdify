@@ -10,9 +10,7 @@ const BEST_STARTING_HANDS = ['AA', 'KK', 'QQ', 'JJ', 'AK',
                              'AT', 'KJ', 'AQ', '99', 'QJ',
                              'KT', '88', 'QT', 'A9', 'AJ'];
 
-const generateDecision = (handCards) => {
-  let currentHand = new Hand(handCards); // create a true hand object(not an array)
-
+const generateDecision = (currentHand) => {
   let firstCardRank = RANKS[currentHand['cards'][0]['rank']]; // rank is an index of card in sorted cards array
   let secondCardRank = RANKS[currentHand['cards'][1]['rank']];
 

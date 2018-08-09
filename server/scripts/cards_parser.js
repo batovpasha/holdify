@@ -35,8 +35,11 @@ const createCards = (hand, table) => { // hand and table are arrays of cards(obj
                                             table[cardIndex]['rank']);
   }
 
+  const currentHandCards = new Hand(handCards)   // create a true hand object(not an array)
+  const currentTableCards = new Hand(tableCards) // similar, create table cards obj using tableCards array
+
   if (!tableCards.length) // if no cards on table then it is a preflop
-    console.log(preflop.generateDecision(handCards));
+    console.log(preflop.generateDecision(currentHandCards)); // in preflop are not table cards
 
   /*
   else if (tableCards.length === 3)
