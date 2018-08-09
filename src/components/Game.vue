@@ -22,6 +22,7 @@
         </div>
       </div>
     </div>
+
     <div class="row bets">
       <div class="col field">
         <div class="field-left">
@@ -37,6 +38,17 @@
         <input class="field-right" type="text" name="" value="">
       </div>
     </div>
+
+    <div class="footer">
+      <div class="button button-success">
+        <img src="../assets/icons/success.svg" alt="">
+      </div>
+      <div @click="reset()" class="button button-reset">
+        <img src="../assets/icons/reset.svg" alt="">
+      </div>
+      <h2>Ход №3</h2>
+      <p>Префлоп - сейчас стоит повысить ставку</p>
+    </div>
   </div>
 </template>
 
@@ -50,6 +62,11 @@ export default {
   data () {
     return {
 
+    }
+  },
+  methods:{
+    reset(){
+      this.$router.push('/')
     }
   }
 }
@@ -135,5 +152,49 @@ export default {
         color: white
         text-align: center
 
-
+  .footer
+    position: absolute
+    bottom: 0
+    width: 100%
+    height: 10vw
+    background: #7f4467
+    text-align: center
+    h2
+      font-family: 'Raleway-ExtraBold', sans-serif
+      color: #8bf9e0
+      font-size: 2vw
+      margin-top: 1%
+    p
+      color: white
+      font-family: 'Raleway', sans-serif
+      font-size: 2vw
+      margin-top: 1%
+    .button
+      position: absolute
+      width: 8vw
+      height: 8vw
+      border-radius: 100%
+      float: left
+      cursor: pointer
+      text-align: center
+      &-success
+        left: 10%
+        top: -50%
+        background: #6dc5af
+        transition: all 1s ease
+        img
+          width: 4vw
+          margin-top: 25%
+        &:hover
+          background: #8bf9e0
+      &-reset
+        right: 10%
+        top: -50%
+        background-color: #f25a5b
+        transition: all 1s ease
+        img
+          width: 4vw
+          margin-top: 25%
+        &:hover
+          background: #cc4142
 </style>
