@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <PopUp/>
     <div class="row cards">
       <div class="col hand">
         <div class="title">
@@ -49,15 +50,18 @@
       <h2>Ход №3</h2>
       <p>Префлоп - сейчас стоит повысить ставку</p>
     </div>
+
   </div>
 </template>
 
 <script>
 import Card from '@/components/Card'
+import PopUp from '@/components/PopUp'
 export default {
   name: 'Preloader',
   components: {
-     Card
+     Card,
+     PopUp
   },
   data () {
     return {
@@ -79,7 +83,7 @@ export default {
   width: 100%
   height: 100%
   background: #2b2b2b
-  overflow: hidden
+  overflow-x: hidden
   .cards
     height: 45%
     .hand, .deck
@@ -181,7 +185,7 @@ export default {
         left: 10%
         top: -50%
         background: #6dc5af
-        transition: all 1s ease
+        transition: background 1s ease
         img
           width: 4vw
           margin-top: 25%
@@ -191,7 +195,7 @@ export default {
         right: 10%
         top: -50%
         background-color: #f25a5b
-        transition: all 1s ease
+        transition: background 1s ease
         img
           width: 4vw
           margin-top: 25%

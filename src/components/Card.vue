@@ -24,7 +24,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='sass' scoped>
 .main
-  width: 100px
-  height: 200px
+  img
+    width: 100%
+    height: 100%
 
 </style>
