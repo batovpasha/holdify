@@ -2,6 +2,7 @@
 
 const { Pack, Hand } = require('tx-holdem');
 const preflop = require('./preflop.js');
+const flop = require('./flop.js');
 
 const pack = new Pack();
 
@@ -29,18 +30,18 @@ const createCards = (pocket, board) => { // hand and table are arrays of cards(o
     pocketCards[cardIndex] = pack.createCard(...Object.values(pocket[cardIndex]));
 
   for (const cardIndex in board)
-    pocketCards[cardIndex] = pack.createCard(...Object.values(board[cardIndex]));
+    boardCards[cardIndex] = pack.createCard(...Object.values(board[cardIndex]));
 
-  const currentPocketCards = new Hand(pocketCards)   // create a true hand object(not an array)
-  const currentBoardCards = new Hand(boardCards) // similar, create table cards obj using boardCards array
+  const currentPocketCards = new Hand(pocketCards); // create a true hand object(not an array)
+  const currentBoardCards = new Hand(boardCards); // similar, create table cards obj using boardCards array
 
   if (!boardCards.length) // if no cards on table then it is a preflop
     console.log(preflop.generateDecision(currentPocketCards)); // in preflop are not table cards
 
-  /*
-  else if (boardCards.length === 3)
+  else if (boardCards.length === 3) // if there are 3 cards on the board - it is a flop
     console.log(flop.generateDecision(currentPocketCards, currentBoardCards));
 
+  /*
   else if (boardCards.length === 4)
     console.log(turn.generateDecision(currentPocketCards, currentBoardCards));
 
@@ -53,9 +54,9 @@ const createCards = (pocket, board) => { // hand and table are arrays of cards(o
   */
 }
 
-createCards([{ suit: 'clubs', rank: 9 },       // hand cards
+createCards([{ suit: 'diamonds', rank: 2 },       // hand cards
              { suit: 'diamonds', rank: 'A' }], //
 
-            [{ suit: 'clubs', rank: 10 },      // table cards
-             { suit: 'spades', rank: 'A' },    //
-             { suit: 'hearts', rank: 'A' }]);  //
+            [{ suit: 'clubs', rank: 9 },      // table cards
+             { suit: 'spades', rank: 'K' },    //
+             { suit: 'hearts', rank: 'J' }]);  //
