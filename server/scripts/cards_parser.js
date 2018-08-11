@@ -25,15 +25,11 @@ const createCards = (hand, table) => { // hand and table are arrays of cards(obj
   const handCards = new Array(hand.length);
   const tableCards = new Array(table.length);
 
-  for (const cardIndex in hand) {
-    handCards[cardIndex] = pack.createCard(hand[cardIndex]['suit'],
-                                           hand[cardIndex]['rank']);
-  }
+  for (const cardIndex in hand)
+    handCards[cardIndex] = pack.createCard(...Object.values(hand[cardIndex]));
 
-  for (const cardIndex in table) {
-    tableCards[cardIndex] = pack.createCard(table[cardIndex]['suit'],
-                                            table[cardIndex]['rank']);
-  }
+  for (const cardIndex in table)
+    handCards[cardIndex] = pack.createCard(...Object.values(table[cardIndex]));
 
   const currentHandCards = new Hand(handCards)   // create a true hand object(not an array)
   const currentTableCards = new Hand(tableCards) // similar, create table cards obj using tableCards array
@@ -48,10 +44,18 @@ const createCards = (hand, table) => { // hand and table are arrays of cards(obj
   else if (tableCards.length === 4)
     console.log(turn.generateDecision(handCards, tableCards));
 
-  else if (tableCards.length === 3)
+  else if (tableCards.length === 5)
     console.log(river.generateDecision(handCards, tableCards));
+
+  else {
+    throw new Error('Not enough table cards!');
+  }
   */
 }
 
-createCards([{ suit: 'clubs', rank: 9 }, { suit: 'diamonds', rank: 'A' }],
-            []);
+createCards([{ suit: 'clubs', rank: 9 },       // hand cards
+             { suit: 'diamonds', rank: 'A' }], //
+
+            [{ suit: 'clubs', rank: 10 },      // table cards
+             { suit: 'spades', rank: 'A' },    //
+             { suit: 'hearts', rank: 'A' }]);  //

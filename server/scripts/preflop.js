@@ -49,6 +49,6 @@ const generateDecision = (currentHand) => {
   //
   //
   //
-}
+};
 
 module.exports = { generateDecision };
