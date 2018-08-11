@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <PopUp/>
+    <PopUp @send_data="parser" v-if="form_visibility"/>
     <div class="row cards">
       <div class="col hand">
         <div class="title">
@@ -41,7 +41,7 @@
     </div>
 
     <div class="footer">
-      <div class="button button-success">
+      <div @click="form_visibility = !form_visibility" class="button button-success">
         <img src="../assets/icons/success.svg" alt="">
       </div>
       <div @click="reset()" class="button button-reset">
@@ -65,12 +65,16 @@ export default {
   },
   data () {
     return {
-
+      form_visibility: false
     }
   },
   methods:{
     reset(){
       this.$router.push('/')
+    },
+    parser(suit,rank){
+      this.form_visibility=!this.form_visibility
+      console.log(`${suit} ${rank}`);
     }
   }
 }
@@ -201,4 +205,5 @@ export default {
           margin-top: 25%
         &:hover
           background: #cc4142
+
 </style>

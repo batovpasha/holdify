@@ -8,19 +8,19 @@
           <h2>Выберите карту...</h2>
         </div>
         <div class="row cards">
-          <Card class='card' v-for='card in cards' v-if='card.slide==activeDot' :key=card.id :suit='card.suit' :rank='card.rank'/>
+          <Card @card_data="sendDataAndQuit" class='card' v-for='card in cards' v-if='card.slide==activeDot' :key=card.id :suit='card.suit' :rank='card.rank'/>
         </div>
         <div class="row cards">
-          <Card class='card' v-for='card in cards' v-if='card.slide==activeDot+1' :key=card.id :suit='card.suit' :rank='card.rank'/>
+          <Card @card_data="sendDataAndQuit" class='card' v-for='card in cards' v-if='card.slide==activeDot+1' :key=card.id :suit='card.suit' :rank='card.rank'/>
         </div>
         <div class="dots">
-          <Dot class='dot' @dot_id='change_id' :id='1'/>
-          <Dot class='dot' @dot_id='change_id' :id='3'/>
-          <Dot class='dot' @dot_id='change_id' :id='5'/>
-          <Dot class='dot' @dot_id='change_id' :id='7'/>
-          <Dot class='dot' @dot_id='change_id' :id='9'/>
-          <Dot class='dot' @dot_id='change_id' :id='11'/>
-          <Dot class='dot' @dot_id='change_id' :id='13'/>
+          <Dot class='dot' @dot_id='change_id' :id='1' :class="{'dot-active':activeDot==1}"/>
+          <Dot class='dot' @dot_id='change_id' :id='3' :class="{'dot-active':activeDot==3}"/>
+          <Dot class='dot' @dot_id='change_id' :id='5' :class="{'dot-active':activeDot==5}"/>
+          <Dot class='dot' @dot_id='change_id' :id='7' :class="{'dot-active':activeDot==7}"/>
+          <Dot class='dot' @dot_id='change_id' :id='9' :class="{'dot-active':activeDot==9}"/>
+          <Dot class='dot' @dot_id='change_id' :id='11' :class="{'dot-active':activeDot==11}"/>
+          <Dot class='dot' @dot_id='change_id' :id='13' :class="{'dot-active':activeDot==13}"/>
         </div>
       </div>
     </div>
@@ -99,6 +99,9 @@ export default {
     change_id(id){
       this.activeDot = id
       console.log(this.activeDot)
+    },
+    sendDataAndQuit(suit, rank){
+      this.$emit('send_data', suit, rank)
     }
   }
 }
@@ -106,61 +109,62 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='sass' scoped>
-.overlay
-  position: absolute
-  background: rgba(0,0,0,.5)
-  width: 100%
-  height: 100%
-  z-index: 5
-.form
-  position: absolute
-  width: 40vw
-  height: 23vw
-  background: #7f4467
-  left: 30%
-  top: 30%
-  z-index: 10
-  border-radius: 5%
-  .title
-    text-align: center
-    h2
-      font-family: 'Raleway-ExtraBold', sans-serif
-      color: #8bf9e0
-      width: 100%
-      height: 4vw
-      font-size: 2vw
-      line-height: 2vw
-      background: #5c314b
-      margin-top: 5%
-      padding-top: 1vw
-  .cards
-    margin: auto
-    margin-top: 1vw
-    width: 80%
-    .card
-      cursor: pointer
-      position: relative
-      width: 4.5vw
-      border-radius: 15%
-      margin-left: 8%
-      &:hover
-        transform: scale(1.1)
-  .dots
+.main
+  .overlay
     position: absolute
-    right: 3vw
-    bottom: 1vw
-    .dot
-      width: 2vw
-      height: 2vw
-      background: #e9e9e9
-      border-color: gray
-      border-style: solid
-      border-width: 2px
-      border-radius: 100%
-      margin-top: 0.25vw
-      &:hover
-        background: #cecece
+    background: rgba(0,0,0,.5)
+    width: 100%
+    height: 100%
+    z-index: 5
+  .form
+    position: absolute
+    width: 40vw
+    height: 23vw
+    background: #7f4467
+    left: 30%
+    top: 30%
+    z-index: 10
+    border-radius: 5%
+    .title
+      text-align: center
+      h2
+        font-family: 'Raleway-ExtraBold', sans-serif
+        color: #8bf9e0
+        width: 100%
+        height: 4vw
+        font-size: 2vw
+        line-height: 2vw
+        background: #5c314b
+        margin-top: 5%
+        padding-top: 1vw
+    .cards
+      margin: auto
+      margin-top: 1vw
+      width: 80%
+      .card
         cursor: pointer
-      &-active
-        background: #cecece
+        position: relative
+        width: 4.5vw
+        border-radius: 15%
+        margin-left: 8%
+        &:hover
+          transform: scale(1.1)
+    .dots
+      position: absolute
+      right: 3vw
+      bottom: 1vw
+      .dot
+        width: 2vw
+        height: 2vw
+        background: #e9e9e9
+        border-color: gray
+        border-style: solid
+        border-width: 2px
+        border-radius: 100%
+        margin-top: 0.25vw
+        &:hover
+          background: #cecece
+          cursor: pointer
+        &-active
+          background: #cecece
 </style>

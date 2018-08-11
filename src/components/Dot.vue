@@ -13,7 +13,7 @@ export default {
   },
   data () {
     return {
-
+      isActive: false
     }
   },
   methods: {
@@ -26,5 +26,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='sass' scoped>
-
+.active
+  background: white
 </style>
