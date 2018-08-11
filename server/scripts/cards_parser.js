@@ -21,31 +21,31 @@ const pack = new Pack();
   etc...
 */
 
-const createCards = (hand, table) => { // hand and table are arrays of cards(objects)
-  const handCards = new Array(hand.length);
-  const tableCards = new Array(table.length);
+const createCards = (pocket, board) => { // hand and table are arrays of cards(objects)
+  const pocketCards = new Array(pocket.length);
+  const boardCards = new Array(board.length);
 
-  for (const cardIndex in hand)
-    handCards[cardIndex] = pack.createCard(...Object.values(hand[cardIndex]));
+  for (const cardIndex in pocket)
+    pocketCards[cardIndex] = pack.createCard(...Object.values(pocket[cardIndex]));
 
-  for (const cardIndex in table)
-    handCards[cardIndex] = pack.createCard(...Object.values(table[cardIndex]));
+  for (const cardIndex in board)
+    pocketCards[cardIndex] = pack.createCard(...Object.values(board[cardIndex]));
 
-  const currentHandCards = new Hand(handCards)   // create a true hand object(not an array)
-  const currentTableCards = new Hand(tableCards) // similar, create table cards obj using tableCards array
+  const currentPocketCards = new Hand(pocketCards)   // create a true hand object(not an array)
+  const currentBoardCards = new Hand(boardCards) // similar, create table cards obj using boardCards array
 
-  if (!tableCards.length) // if no cards on table then it is a preflop
-    console.log(preflop.generateDecision(currentHandCards)); // in preflop are not table cards
+  if (!boardCards.length) // if no cards on table then it is a preflop
+    console.log(preflop.generateDecision(currentPocketCards)); // in preflop are not table cards
 
   /*
-  else if (tableCards.length === 3)
-    console.log(flop.generateDecision(handCards, tableCards));
+  else if (boardCards.length === 3)
+    console.log(flop.generateDecision(currentPocketCards, currentBoardCards));
 
-  else if (tableCards.length === 4)
-    console.log(turn.generateDecision(handCards, tableCards));
+  else if (boardCards.length === 4)
+    console.log(turn.generateDecision(currentPocketCards, currentBoardCards));
 
-  else if (tableCards.length === 5)
-    console.log(river.generateDecision(handCards, tableCards));
+  else if (boardCards.length === 5)
+    console.log(river.generateDecision(currentPocketCards, currentBoardCards));
 
   else {
     throw new Error('Not enough table cards!');
