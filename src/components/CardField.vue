@@ -7,19 +7,19 @@
 <script>
 export default {
   name: 'Card',
-  props: ['suit','rank','is_open','id'],
+  props: ['suit', 'rank', 'is_open', 'id'],
   data () {
     return {
 
     }
   },
-  methods:{
-      backgroundImage() {
-        return require('../assets/media/' + this.rank + '_' + this.suit + '.png')
-      },
-      sendId(){
-        this.$emit('send_id', this.id)
-      }
+  methods: {
+    backgroundImage () {
+      return require('../assets/media/' + this.rank + '_' + this.suit + '.png')
+    },
+    sendId () {
+      this.$emit('send_id', this.id)
+    }
   }
 }
 </script>

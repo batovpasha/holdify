@@ -13,7 +13,6 @@
     </div>
   </transition>
 </template>
-
 <script>
 export default {
   name: 'Preloader',
@@ -41,17 +40,16 @@ export default {
         this.load_start = true
       }, 1500)
 
-      window.setInterval(()=>{
-        if (this.dot_counter == 3){
+      window.setInterval(() => {
+        if (this.dot_counter === 3) {
           this.dot_counter = 0
           this.dots = ''
         } else {
           this.dots += '.'
           this.dot_counter++
         }
-      },500)
+      }, 500)
     }
-
   },
   created () {
     this.fade()
@@ -59,7 +57,6 @@ export default {
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='sass' scoped>
 .main
@@ -120,7 +117,5 @@ export default {
 
 .fade-enter, .fade-leave-to
   opacity: 0
-
-
 
 </style>

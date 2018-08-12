@@ -8,7 +8,7 @@
 export default {
   name: 'PopUp',
   props: ['id'],
-  components:{
+  components: {
 
   },
   data () {
@@ -17,7 +17,7 @@ export default {
     }
   },
   methods: {
-    activeDot(){
+    activeDot () {
       this.$emit('dot_id', this.id)
     }
   }

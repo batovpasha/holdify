@@ -7,17 +7,17 @@
 <script>
 export default {
   name: 'Card',
-  props: ['suit','rank'],
+  props: ['suit', 'rank'],
   data () {
     return {
 
     }
   },
-  methods:{
-    backgroundImage() {
+  methods: {
+    backgroundImage () {
       return require('../assets/media/' + this.rank + '_' + this.suit + '.png')
     },
-    sendCardData(){
+    sendCardData () {
       this.$emit('card_data', this.suit, this.rank)
     }
   }

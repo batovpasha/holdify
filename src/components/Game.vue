@@ -19,7 +19,7 @@
           <div class="strip strip-right"></div>
         </div>
         <div class="row deck-cards">
-          <CardField @send_id="receiveId" v-for='card in cards' v-if="card.id>1":suit='card.suit' :rank='card.rank' :id='card.id' :key='card.id' class="card-field card-field-hand"/>
+          <CardField @send_id="receiveId" v-for='card in cards' v-if="card.id>1" :suit='card.suit' :rank='card.rank' :id='card.id' :key='card.id' class="card-field card-field-deck"/>
         </div>
       </div>
     </div>
@@ -61,35 +61,38 @@ import PopUp from '@/components/PopUp'
 export default {
   name: 'Preloader',
   components: {
-     Card,
-     PopUp,
-     CardField
+    Card,
+    PopUp,
+    CardField
   },
   data () {
     return {
       form_visibility: false,
       temp_id: -1,
-      cards:[
-        {suit: 'none', rank: 'none', is_open: 'false', id:0},
-        {suit: 'none', rank: 'none', is_open: 'false', id:1},
-        {suit: 'none', rank: 'none', is_open: 'false', id:2},
-        {suit: 'none', rank: 'none', is_open: 'false', id:3},
-        {suit: 'none', rank: 'none', is_open: 'false', id:4},
-        {suit: 'none', rank: 'none', is_open: 'false', id:5},
-        {suit: 'none', rank: 'none', is_open: 'false', id:6}
+      cards: [
+        {suit: 'none', rank: 'none', is_open: 'false', id: 0},
+        {suit: 'none', rank: 'none', is_open: 'false', id: 1},
+        {suit: 'none', rank: 'none', is_open: 'false', id: 2},
+        {suit: 'none', rank: 'none', is_open: 'false', id: 3},
+        {suit: 'none', rank: 'none', is_open: 'false', id: 4},
+        {suit: 'none', rank: 'none', is_open: 'false', id: 5},
+        {suit: 'none', rank: 'none', is_open: 'false', id: 6}
       ]
     }
   },
-  methods:{
-    reset(){
+  methods: {
+    reset () {
       this.$router.push('/')
     },
-    parser(suit,rank){
-      this.form_visibility=!this.form_visibility
-      this.$set(this.cards, this.temp_id, {suit: suit, rank: rank, is_open: 'false', id:this.temp_id})
+    parser (suit, rank) {
+      this.form_visibility = !this.form_visibility
+      this.$set(this.cards, this.temp_id, {suit: suit, rank: rank, is_open: 'false', id: this.temp_id})
     },
-    receiveId(id){
+    receiveId (id) {
       this.temp_id = id
+      this.form_visibility = !this.form_visibility
+    },
+    go_back () {
       this.form_visibility = !this.form_visibility
     }
   }
@@ -111,24 +114,34 @@ export default {
       padding-top: 2%
       .hand-cards
         height: 10vw
-        .card-field
-          width: 5vw
+        margin-left: 30%
+        margin-top: 3%
+        .card-field-hand
+          cursor: pointer
+          border-radius: 10%
+          width: 7vw
           height: 10vw
-          margin-left: 20%
-          border: 1px solid white
           display: block
           position: relative
+          margin-left: 5%
           z-index: 3
+          &:hover
+            transform: scale(1.1)
       .deck-cards
         height: 10vw
-        .card-field
-          width: 5vw
+        margin-left: 10%
+        margin-top: 3%
+        .card-field-deck
+          width: 7vw
           height: 10vw
-          margin-left: 20%
-          border: 1px solid white
           display: block
           position: relative
+          margin-left: 2%
           z-index: 3
+          cursor: pointer
+          border-radius: 10%
+          &:hover
+            transform: scale(1.1)
       .title
         margin: auto
         font-family: 'Raleway-ExtraBold', sans-serif
