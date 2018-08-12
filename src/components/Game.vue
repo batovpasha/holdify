@@ -9,7 +9,7 @@
           <div class="strip strip-right"></div>
         </div>
         <div class="row hand-cards">
-
+          <CardField @send_id="receiveId" v-for='card in cards' v-if="card.id<2" :suit='card.suit' :rank='card.rank' :id='card.id' :key='card.id' class="card-field card-field-hand"/>
         </div>
       </div>
       <div class="col deck">
@@ -19,7 +19,7 @@
           <div class="strip strip-right"></div>
         </div>
         <div class="row deck-cards">
-
+          <CardField @send_id="receiveId" v-for='card in cards' v-if="card.id>1":suit='card.suit' :rank='card.rank' :id='card.id' :key='card.id' class="card-field card-field-hand"/>
         </div>
       </div>
     </div>
@@ -41,7 +41,7 @@
     </div>
 
     <div class="footer">
-      <div @click="form_visibility = !form_visibility" class="button button-success">
+      <div class="button button-success">
         <img src="../assets/icons/success.svg" alt="">
       </div>
       <div @click="reset()" class="button button-reset">
@@ -56,16 +56,28 @@
 
 <script>
 import Card from '@/components/Card'
+import CardField from '@/components/CardField'
 import PopUp from '@/components/PopUp'
 export default {
   name: 'Preloader',
   components: {
      Card,
-     PopUp
+     PopUp,
+     CardField
   },
   data () {
     return {
-      form_visibility: false
+      form_visibility: false,
+      temp_id: -1,
+      cards:[
+        {suit: 'none', rank: 'none', is_open: 'false', id:0},
+        {suit: 'none', rank: 'none', is_open: 'false', id:1},
+        {suit: 'none', rank: 'none', is_open: 'false', id:2},
+        {suit: 'none', rank: 'none', is_open: 'false', id:3},
+        {suit: 'none', rank: 'none', is_open: 'false', id:4},
+        {suit: 'none', rank: 'none', is_open: 'false', id:5},
+        {suit: 'none', rank: 'none', is_open: 'false', id:6}
+      ]
     }
   },
   methods:{
@@ -74,7 +86,11 @@ export default {
     },
     parser(suit,rank){
       this.form_visibility=!this.form_visibility
-      console.log(`${suit} ${rank}`);
+      this.$set(this.cards, this.temp_id, {suit: suit, rank: rank, is_open: 'false', id:this.temp_id})
+    },
+    receiveId(id){
+      this.temp_id = id
+      this.form_visibility = !this.form_visibility
     }
   }
 }
@@ -93,6 +109,26 @@ export default {
     .hand, .deck
       text-align: center
       padding-top: 2%
+      .hand-cards
+        height: 10vw
+        .card-field
+          width: 5vw
+          height: 10vw
+          margin-left: 20%
+          border: 1px solid white
+          display: block
+          position: relative
+          z-index: 3
+      .deck-cards
+        height: 10vw
+        .card-field
+          width: 5vw
+          height: 10vw
+          margin-left: 20%
+          border: 1px solid white
+          display: block
+          position: relative
+          z-index: 3
       .title
         margin: auto
         font-family: 'Raleway-ExtraBold', sans-serif

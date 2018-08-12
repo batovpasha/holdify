@@ -38,6 +38,7 @@ export default {
   data () {
     return {
       activeDot: 1,
+      source_id: 0,
       cards: [
         {id:1, suit: 'diamonds', rank:'A', slide: 1},
         {id:2, suit: 'spades', rank:'A', slide: 1},
