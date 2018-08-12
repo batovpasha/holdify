@@ -55,8 +55,8 @@ const createCards = (pocket, board) => { // hand and table are arrays of cards(o
 }
 
 createCards([{ suit: 'diamonds', rank: 2 },       // hand cards
-             { suit: 'diamonds', rank: 'A' }], //
+             { suit: 'diamonds', rank: 3 }],    //
 
-            [{ suit: 'clubs', rank: 9 },      // table cards
-             { suit: 'spades', rank: 'K' },    //
-             { suit: 'hearts', rank: 'J' }]);  //
+            [{ suit: 'spades', rank: 10 },      // table cards
+             { suit: 'spades', rank: 'A' },      //
+             { suit: 'hearts', rank: 'K' }]);    //
