@@ -29,11 +29,11 @@ export default {
       // window.document.body.onload = () => {
       //   window.setTimeout(()=>{
       //     this.$router.push('/game')
-      //   }, 1000)
+      //   }, 3000)
       // }
       window.setTimeout(() => {
         this.$router.push('/game')
-      }, 3000)
+      }, 6000)
     },
     loading () {
       window.setTimeout(() => {
