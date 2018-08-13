@@ -101,7 +101,7 @@ export default {
         width: 10vw
         height: 8vw
         left: 24%
-        background: url('../assets/media/logo.png')
+        background: url('/static/img/logo.png')
         background-position: center
         background-size: cover
 

@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <img @click="sendCardData()" :src="backgroundImage()" alt="">
+    <img @click="sendCardData()" :src="`/static/img/${rank}_${suit}.png`" alt="">
   </div>
 </template>
 
@@ -14,9 +14,6 @@ export default {
     }
   },
   methods: {
-    backgroundImage () {
-      return require('../assets/media/' + this.rank + '_' + this.suit + '.png')
-    },
     sendCardData () {
       this.$emit('card_data', this.suit, this.rank)
     }

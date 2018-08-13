@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <img @click='sendId()' :src="backgroundImage()" alt="">
+    <img @click='sendId()' :src="`/static/img/${rank}_${suit}.png`" alt="">
   </div>
 </template>
 
@@ -14,9 +14,6 @@ export default {
     }
   },
   methods: {
-    backgroundImage () {
-      return require('../assets/media/' + this.rank + '_' + this.suit + '.png')
-    },
     sendId () {
       this.$emit('send_id', this.id)
     }
