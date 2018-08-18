@@ -9,7 +9,7 @@
           <div class="strip strip-right"></div>
         </div>
         <div class="row hand-cards">
-          <CardField @send_id="receiveId" v-for='card in cards' v-if="card.id<2" :suit='card.suit' :rank='card.rank' :id='card.id' :key='card.id' class="card-field card-field-hand"/>
+          <CardField @send_id="receiveId" v-for='card in cards' :class="{'card-field-hand-active' : card.is_open}" v-if="card.id<2" :suit='card.suit' :rank='card.rank' :id='card.id' :key='card.id' class="card-field card-field-hand"/>
         </div>
       </div>
       <div class="col deck">
@@ -19,7 +19,7 @@
           <div class="strip strip-right"></div>
         </div>
         <div class="row deck-cards">
-          <CardField @send_id="receiveId" v-for='card in cards' v-if="card.id>1" :suit='card.suit' :rank='card.rank' :id='card.id' :key='card.id' class="card-field card-field-deck"/>
+          <CardField @send_id="receiveId" v-for='card in cards' v-if="card.id>1" :class="{'card-field-deck-active':card.is_open}" :suit='card.suit' :rank='card.rank' :id='card.id' :key='card.id' class="card-field card-field-deck"/>
         </div>
       </div>
     </div>
@@ -41,14 +41,14 @@
     </div>
 
     <div class="footer">
-      <div class="button button-success">
+      <div @click="send_round_data()" class="button button-success">
         <img src="../assets/icons/success.svg" alt="">
       </div>
       <div @click="reset()" class="button button-reset">
         <img src="../assets/icons/reset.svg" alt="">
       </div>
-      <h2>Ход №3</h2>
-      <p>Префлоп - сейчас стоит повысить ставку</p>
+      <h2>{{name_of_round}}</h2>
+      <p>{{advice}}</p>
     </div>
 
   </div>
@@ -69,28 +69,107 @@ export default {
     return {
       form_visibility: false,
       temp_id: -1,
+      name_of_round: 'Preflop',
+      advice: 'Укажите карты и нажмите зелёную кнопку',
+      counter: 0,
+      rounds : ['Preflop', 'Flop', 'Turn', 'River'],
       cards: [
-        {suit: 'none', rank: 'none', is_open: 'false', id: 0},
-        {suit: 'none', rank: 'none', is_open: 'false', id: 1},
-        {suit: 'none', rank: 'none', is_open: 'false', id: 2},
-        {suit: 'none', rank: 'none', is_open: 'false', id: 3},
-        {suit: 'none', rank: 'none', is_open: 'false', id: 4},
-        {suit: 'none', rank: 'none', is_open: 'false', id: 5},
-        {suit: 'none', rank: 'none', is_open: 'false', id: 6}
+        {suit: 'none', rank: 'none', is_open: true, id: 0},
+        {suit: 'none', rank: 'none', is_open: true, id: 1},
+        {suit: 'none', rank: 'none', is_open: false, id: 2},
+        {suit: 'none', rank: 'none', is_open: false, id: 3},
+        {suit: 'none', rank: 'none', is_open: false, id: 4},
+        {suit: 'none', rank: 'none', is_open: false, id: 5},
+        {suit: 'none', rank: 'none', is_open: false, id: 6}
       ]
     }
   },
+  created () {
+
+  },
+  updated () {
+    window.setInterval(() => this.validation(), 100)
+  },
   methods: {
+    send_round_data () {
+      this.counter++
+      switch (this.counter) {
+        case 0:
+          this.name_of_round = 'Preflop'
+          this.advice = 'Укажите карты и нажмите зелёную кнопку'
+
+          //место для отправки данных
+          break;
+        case 1:
+          this.name_of_round = 'Preflop'
+
+          //место для получения данных
+          this.advice = 'Ваш совет - (совет на префлопе). Нажмите ок для продолжения.'
+          break;
+        case 2:
+          this.name_of_round = 'Flop'
+          this.advice = 'Укажите карты и нажмите зелёную кнопку'
+          this.cards[2].is_open = true
+          this.cards[3].is_open = true
+          this.cards[4].is_open = true
+
+          //место для отправки данных
+          break;
+        case 3:
+          this.name_of_round = 'Flop'
+          this.advice = 'Ваш совет - (совет на флопе). Нажмите ок для продолжения.'
+          //место для получения данных
+          break;
+        case 4:
+          this.name_of_round = 'Turn'
+          this.advice = 'Укажите карты и нажмите зелёную кнопку'
+          this.cards[5].is_open = true
+
+          //место для отправки данных
+          break;
+        case 5:
+          this.name_of_round = 'Turn'
+          this.advice = 'Ваш совет - (совет на тёрне). Нажмите ок для продолжения.'
+          //место для получения данных
+          break;
+        case 6:
+          this.name_of_round = 'River'
+          this.advice = 'Укажите карты и нажмите зелёную кнопку'
+          this.cards[6].is_open = true
+
+          //место для отправки данных
+          break;
+        case 7:
+          this.name_of_round = 'River'
+          this.advice = 'Ваш совет - (совет на ривере). Нажмите ок для продолжения.'
+          //место для получения данных
+          break;
+        case 8:
+          this.name_of_round = 'Конец игры'
+          this.advice = 'Игра окончена, нажмите на крестик, чтоб сыграть снова'
+          //убрать кнопку ок
+      }
+      console.log(this.counter)
+    },
+    validation () {
+      //validation part
+    },
     reset () {
       this.$router.push('/')
     },
     parser (suit, rank) {
       this.form_visibility = !this.form_visibility
-      this.$set(this.cards, this.temp_id, {suit: suit, rank: rank, is_open: 'false', id: this.temp_id})
+      this.$set(this.cards, this.temp_id, {suit: suit, rank: rank, is_open: this.cards[this.temp_id].is_open, id: this.temp_id})
     },
     receiveId (id) {
-      this.temp_id = id
-      this.form_visibility = !this.form_visibility
+      if (this.cards[id].is_open === true){
+        this.temp_id = id
+        this.advice = 'Укажите карты и нажмите зелёную кнопку'
+        this.form_visibility = !this.form_visibility
+      }
+      else {
+        this.advice = 'В данном раунде эта карта недоступна'
+      }
     },
     go_back () {
       this.form_visibility = !this.form_visibility
@@ -118,13 +197,15 @@ export default {
         margin-top: 3%
         .card-field-hand
           cursor: pointer
-          border-radius: 10%
+          border-radius: 15%
           width: 7vw
           height: 10vw
           display: block
           position: relative
           margin-left: 5%
           z-index: 3
+          &-active
+            border: 5px solid #6dc5af
           &:hover
             transform: scale(1.1)
       .deck-cards
@@ -139,9 +220,11 @@ export default {
           margin-left: 2%
           z-index: 3
           cursor: pointer
-          border-radius: 10%
-          &:hover
-            transform: scale(1.1)
+          border-radius: 15%
+          &-active
+            border: 3px solid #6dc5af
+            &:hover
+              transform: scale(1.1)
       .title
         margin: auto
         font-family: 'Raleway-ExtraBold', sans-serif
