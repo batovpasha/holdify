@@ -8,10 +8,10 @@
           <h2>Выберите карту...</h2>
         </div>
         <div class="row cards">
-          <Card @card_data="sendDataAndQuit" class='card' v-for='card in cards' v-if='card.slide==activeDot' :key=card.id :suit='card.suit' :rank='card.rank'/>
+          <Card @card_data="sendDataAndQuit" class='card' v-for='card in cards' v-if='card.slide==activeDot' :card_id="card.id" :key="card.id" :suit='card.suit' :rank='card.rank'/>
         </div>
         <div class="row cards">
-          <Card @card_data="sendDataAndQuit" class='card' v-for='card in cards' v-if='card.slide==activeDot+1' :key=card.id :suit='card.suit' :rank='card.rank'/>
+          <Card @card_data="sendDataAndQuit" class='card' v-for='card in cards' v-if='card.slide==activeDot+1' :card_id="card.id" :key="card.id" :suit='card.suit' :rank='card.rank'/>
         </div>
         <div class="dots">
           <Dot class='dot' @dot_id='change_id' :id='1' :class="{'dot-active':activeDot==1}"/>
@@ -101,8 +101,8 @@ export default {
       this.activeDot = id
       console.log(this.activeDot)
     },
-    sendDataAndQuit (suit, rank) {
-      this.$emit('send_data', suit, rank)
+    sendDataAndQuit (suit, rank, card_id) {
+      this.$emit('send_data', suit, rank, card_id)
     },
     go_back () {
       this.$parent.form_visibility = !this.$parent.form_visibility

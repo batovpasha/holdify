@@ -33,7 +33,7 @@ export default {
       // }
       window.setTimeout(() => {
         this.$router.push('/game')
-      }, 6000)
+      }, 4000)
     },
     loading () {
       window.setTimeout(() => {

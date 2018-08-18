@@ -41,7 +41,7 @@
     </div>
 
     <div class="footer">
-      <div @click="send_round_data()" class="button button-success">
+      <div @click="send_round_data()" v-if="this.btn_availability" class="button button-success">
         <img src="../assets/icons/success.svg" alt="">
       </div>
       <div @click="reset()" class="button button-reset">
@@ -72,23 +72,24 @@ export default {
       name_of_round: 'Preflop',
       advice: 'Укажите карты и нажмите зелёную кнопку',
       counter: 0,
+      btn_availability: false,
       rounds : ['Preflop', 'Flop', 'Turn', 'River'],
       cards: [
-        {suit: 'none', rank: 'none', is_open: true, id: 0},
-        {suit: 'none', rank: 'none', is_open: true, id: 1},
-        {suit: 'none', rank: 'none', is_open: false, id: 2},
-        {suit: 'none', rank: 'none', is_open: false, id: 3},
-        {suit: 'none', rank: 'none', is_open: false, id: 4},
-        {suit: 'none', rank: 'none', is_open: false, id: 5},
-        {suit: 'none', rank: 'none', is_open: false, id: 6}
+        {suit: 'none', rank: 'none', is_open: true, id: 0, card_id: -1},
+        {suit: 'none', rank: 'none', is_open: true, id: 1, card_id: -2},
+        {suit: 'none', rank: 'none', is_open: false, id: 2, card_id: -3},
+        {suit: 'none', rank: 'none', is_open: false, id: 3, card_id: -4},
+        {suit: 'none', rank: 'none', is_open: false, id: 4, card_id: -5},
+        {suit: 'none', rank: 'none', is_open: false, id: 5, card_id: -6},
+        {suit: 'none', rank: 'none', is_open: false, id: 6, card_id: -7}
       ]
     }
   },
   created () {
 
   },
-  updated () {
-    window.setInterval(() => this.validation(), 100)
+  beforeUpdate () {
+    this.validation()
   },
   methods: {
     send_round_data () {
@@ -147,19 +148,33 @@ export default {
         case 8:
           this.name_of_round = 'Конец игры'
           this.advice = 'Игра окончена, нажмите на крестик, чтоб сыграть снова'
-          //убрать кнопку ок
+          this.btn_availability = false
       }
       console.log(this.counter)
     },
     validation () {
-      //validation part
+      let valueArr = this.cards.map((item) => item.card_id)
+      let openArr = this.cards.map((item) => item.is_open)
+      let isDuplicate = valueArr.some((item, idx) => valueArr.indexOf(item) != idx)
+      if (isDuplicate == true || this.all_cards_is_chosen() == false || this.counter == 8) {
+        this.btn_availability = false
+      } else {
+        this.btn_availability = true
+      }
+
+    },
+    all_cards_is_chosen () {
+      for (let i = 0; i < this.cards.length; i++) {
+        if ((this.cards[i].suit == 'none')&&(this.cards[i].is_open)) return false
+      }
+      return true
     },
     reset () {
       this.$router.push('/')
     },
-    parser (suit, rank) {
+    parser (suit, rank, card_id) {
       this.form_visibility = !this.form_visibility
-      this.$set(this.cards, this.temp_id, {suit: suit, rank: rank, is_open: this.cards[this.temp_id].is_open, id: this.temp_id})
+      this.$set(this.cards, this.temp_id, {suit: suit, rank: rank, is_open: this.cards[this.temp_id].is_open, id: this.temp_id, card_id: card_id})
     },
     receiveId (id) {
       if (this.cards[id].is_open === true){

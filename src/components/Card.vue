@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'Card',
-  props: ['suit', 'rank'],
+  props: ['suit', 'rank', 'card_id'],
   data () {
     return {
 
@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     sendCardData () {
-      this.$emit('card_data', this.suit, this.rank)
+      this.$emit('card_data', this.suit, this.rank, this.card_id)
     }
   }
 }
