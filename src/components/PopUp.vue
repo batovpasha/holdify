@@ -98,13 +98,16 @@ export default {
   },
   methods: {
     change_id (id) {
+    //  marks the active dot
       this.activeDot = id
       console.log(this.activeDot)
     },
-    sendDataAndQuit (suit, rank, card_id) {
-      this.$emit('send_data', suit, rank, card_id)
+    sendDataAndQuit (suit, rank, cardId) {
+    //  create event 'send_data', that sends suit, rank and card id on click
+      this.$emit('send_data', suit, rank, cardId)
     },
     go_back () {
+    // closes the pop-up form
       this.$parent.form_visibility = !this.$parent.form_visibility
     }
   }

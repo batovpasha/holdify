@@ -15,6 +15,7 @@ export default {
   },
   methods: {
     sendId () {
+      //  create event 'send_id', that sends id of the card by clicking
       this.$emit('send_id', this.id)
     }
   }

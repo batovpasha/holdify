@@ -18,6 +18,7 @@ export default {
   },
   methods: {
     activeDot () {
+      //  create event 'dot_id', that sends id of the dot by clicking
       this.$emit('dot_id', this.id)
     }
   }

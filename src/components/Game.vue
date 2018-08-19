@@ -74,15 +74,15 @@ export default {
       bank: 0,
       bet: 0,
       btn_availability: false,
-      rounds : ['Preflop', 'Flop', 'Turn', 'River'],
+      rounds: ['Preflop', 'Flop', 'Turn', 'River'],
       cards: [
-        {suit: 'none', rank: 'none', is_open: true, id: 0, card_id: -1},
-        {suit: 'none', rank: 'none', is_open: true, id: 1, card_id: -2},
-        {suit: 'none', rank: 'none', is_open: false, id: 2, card_id: -3},
-        {suit: 'none', rank: 'none', is_open: false, id: 3, card_id: -4},
-        {suit: 'none', rank: 'none', is_open: false, id: 4, card_id: -5},
-        {suit: 'none', rank: 'none', is_open: false, id: 5, card_id: -6},
-        {suit: 'none', rank: 'none', is_open: false, id: 6, card_id: -7}
+        {suit: 'none', rank: 'none', is_open: true, id: 0, cardId: -1},
+        {suit: 'none', rank: 'none', is_open: true, id: 1, cardId: -2},
+        {suit: 'none', rank: 'none', is_open: false, id: 2, cardId: -3},
+        {suit: 'none', rank: 'none', is_open: false, id: 3, cardId: -4},
+        {suit: 'none', rank: 'none', is_open: false, id: 4, cardId: -5},
+        {suit: 'none', rank: 'none', is_open: false, id: 5, cardId: -6},
+        {suit: 'none', rank: 'none', is_open: false, id: 6, cardId: -7}
       ]
     }
   },
@@ -93,18 +93,19 @@ export default {
     window.setInterval(() => this.validation(), 300)
   },
   methods: {
+    //  create a request that returns an object with such fields as: bank, bet, hand cards and table cards
     create_request () {
       this.hand_cards = []
       this.table_cards = []
-      for (let i = 0; i < 2; i++){
-         if (this.cards[i].suit !='none'){
-           this.hand_cards.push({suit: this.cards[i].suit, rank: this.cards[i].rank})
-         }
+      for (let i = 0; i < 2; i++) {
+        if (this.cards[i].suit !== 'none') {
+          this.hand_cards.push({suit: this.cards[i].suit, rank: this.cards[i].rank})
+        }
       }
-      for (let i = 2; i < 7; i++){
-         if (this.cards[i].suit !='none'){
-           this.table_cards.push({suit: this.cards[i].suit, rank: this.cards[i].rank})
-         }
+      for (let i = 2; i < 7; i++) {
+        if (this.cards[i].suit !== 'none') {
+          this.table_cards.push({suit: this.cards[i].suit, rank: this.cards[i].rank})
+        }
       }
       this.data = {
         bank: this.$refs.bank.value,
@@ -115,49 +116,50 @@ export default {
       this.axios.post('/game', this.data).then(response => console.log(response))
     },
     send_round_data () {
+      // describes the game process
       this.counter++
       switch (this.counter) {
         case 0:
           this.name_of_round = 'Preflop'
           this.advice = 'Укажите карты, банк и ставку'
-          break;
+          break
         case 1:
           this.name_of_round = 'Preflop'
           this.create_request()
           this.advice = 'Ваш совет - (совет на префлопе). Нажмите ок для продолжения.'
-          break;
+          break
         case 2:
           this.name_of_round = 'Flop'
           this.advice = 'Укажите карты, банк и ставку'
           this.cards[2].is_open = true
           this.cards[3].is_open = true
           this.cards[4].is_open = true
-          break;
+          break
         case 3:
           this.name_of_round = 'Flop'
           this.create_request()
           this.advice = 'Ваш совет - (совет на флопе). Нажмите ок для продолжения.'
-          break;
+          break
         case 4:
           this.name_of_round = 'Turn'
           this.advice = 'Укажите карты, банк и ставку'
           this.cards[5].is_open = true
-          break;
+          break
         case 5:
           this.name_of_round = 'Turn'
           this.create_request()
           this.advice = 'Ваш совет - (совет на тёрне). Нажмите ок для продолжения.'
-          break;
+          break
         case 6:
           this.name_of_round = 'River'
           this.advice = 'Укажите карты, банк и ставку'
           this.cards[6].is_open = true
-          break;
+          break
         case 7:
           this.name_of_round = 'River'
           this.create_request()
           this.advice = 'Ваш совет - (совет на ривере). Нажмите ок для продолжения.'
-          break;
+          break
         case 8:
           this.name_of_round = 'Конец игры'
           this.advice = 'Игра окончена, нажмите на крестик, чтоб сыграть снова'
@@ -165,36 +167,37 @@ export default {
       }
     },
     validation () {
-      let valueArr = this.cards.map((item) => item.card_id)
-      let openArr = this.cards.map((item) => item.is_open)
-      let isDuplicate = valueArr.some((item, idx) => valueArr.indexOf(item) != idx)
-      if (isDuplicate == true || this.all_cards_is_chosen() == false || this.counter == 8 || this.$refs.bank.value == 0 || this.$refs.bet.value == 0) {
+      // checks if the input data is correct
+      let valueArr = this.cards.map((item) => item.cardId)
+      let isDuplicate = valueArr.some((item, idx) => valueArr.indexOf(item) !== idx)
+      if (isDuplicate === true || this.all_cards_is_chosen() === false || this.counter === 8 || this.$refs.bank.value === '0' || this.$refs.bet.value === '0') {
         this.btn_availability = false
       } else {
         this.btn_availability = true
       }
-
     },
     all_cards_is_chosen () {
+      // checks if all cards is chosen
       for (let i = 0; i < this.cards.length; i++) {
-        if ((this.cards[i].suit == 'none')&&(this.cards[i].is_open)) return false
+        if ((this.cards[i].suit === 'none') && (this.cards[i].is_open)) return false
       }
       return true
     },
     reset () {
+      // reseting the game
       this.$router.push('/')
     },
-    parser (suit, rank, card_id) {
+    parser (suit, rank, cardId) {
+      // reveive the event data and updating the this.cards object
       this.form_visibility = !this.form_visibility
-      this.$set(this.cards, this.temp_id, {suit: suit, rank: rank, is_open: this.cards[this.temp_id].is_open, id: this.temp_id, card_id: card_id})
+      this.$set(this.cards, this.temp_id, {suit: suit, rank: rank, is_open: this.cards[this.temp_id].is_open, id: this.temp_id, cardId: cardId})
     },
     receiveId (id) {
-      if (this.cards[id].is_open === true){
+      if (this.cards[id].is_open === true) {
         this.temp_id = id
         this.advice = 'Укажите карты, банк и ставку'
         this.form_visibility = !this.form_visibility
-      }
-      else {
+      } else {
         this.advice = 'В данном раунде эта карта недоступна'
       }
     },

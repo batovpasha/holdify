@@ -15,6 +15,7 @@ export default {
   },
   methods: {
     sendCardData () {
+      //  create event 'card_data', that sends suit, rank and card id on click
       this.$emit('card_data', this.suit, this.rank, this.card_id)
     }
   }

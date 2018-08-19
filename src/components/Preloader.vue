@@ -26,16 +26,13 @@ export default {
   },
   methods: {
     fade () {
-      // window.document.body.onload = () => {
-      //   window.setTimeout(()=>{
-      //     this.$router.push('/game')
-      //   }, 3000)
-      // }
+      //  fade animation
       window.setTimeout(() => {
         this.$router.push('/game')
       }, 4000)
     },
     loading () {
+      //  load animation
       window.setTimeout(() => {
         this.load_start = true
       }, 1500)
