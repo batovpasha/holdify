@@ -29,14 +29,13 @@
         <div class="field-left">
           Банк
         </div>
-        <input class="field-right" type="text" name="" value="">
-
+        <input class="field-right" type="text" name="" ref="bank" value="0">
       </div>
       <div class="col field">
         <div class="field-left">
           Ставка
         </div>
-        <input class="field-right" type="text" name="" value="">
+        <input class="field-right" type="text" name="" ref="bet" value="0">
       </div>
     </div>
 
@@ -70,8 +69,10 @@ export default {
       form_visibility: false,
       temp_id: -1,
       name_of_round: 'Preflop',
-      advice: 'Укажите карты и нажмите зелёную кнопку',
+      advice: 'Укажите карты, банк и ставку',
       counter: 0,
+      bank: 0,
+      bet: 0,
       btn_availability: false,
       rounds : ['Preflop', 'Flop', 'Turn', 'River'],
       cards: [
@@ -89,74 +90,85 @@ export default {
 
   },
   beforeUpdate () {
-    this.validation()
+    window.setInterval(() => this.validation(), 300)
   },
   methods: {
+    create_request () {
+      this.hand_cards = []
+      this.table_cards = []
+      for (let i = 0; i < 2; i++){
+         if (this.cards[i].suit !='none'){
+           this.hand_cards.push({suit: this.cards[i].suit, rank: this.cards[i].rank})
+         }
+      }
+      for (let i = 2; i < 7; i++){
+         if (this.cards[i].suit !='none'){
+           this.table_cards.push({suit: this.cards[i].suit, rank: this.cards[i].rank})
+         }
+      }
+      this.data = {
+        bank: this.$refs.bank.value,
+        bet: this.$refs.bet.value,
+        hand_cards: this.hand_cards,
+        table_cards: this.table_cards
+      }
+      this.axios.post('/game', this.data).then(response => console.log(response))
+    },
     send_round_data () {
       this.counter++
       switch (this.counter) {
         case 0:
           this.name_of_round = 'Preflop'
-          this.advice = 'Укажите карты и нажмите зелёную кнопку'
-
-          //место для отправки данных
+          this.advice = 'Укажите карты, банк и ставку'
           break;
         case 1:
           this.name_of_round = 'Preflop'
-
-          //место для получения данных
+          this.create_request()
           this.advice = 'Ваш совет - (совет на префлопе). Нажмите ок для продолжения.'
           break;
         case 2:
           this.name_of_round = 'Flop'
-          this.advice = 'Укажите карты и нажмите зелёную кнопку'
+          this.advice = 'Укажите карты, банк и ставку'
           this.cards[2].is_open = true
           this.cards[3].is_open = true
           this.cards[4].is_open = true
-
-          //место для отправки данных
           break;
         case 3:
           this.name_of_round = 'Flop'
+          this.create_request()
           this.advice = 'Ваш совет - (совет на флопе). Нажмите ок для продолжения.'
-          //место для получения данных
           break;
         case 4:
           this.name_of_round = 'Turn'
-          this.advice = 'Укажите карты и нажмите зелёную кнопку'
+          this.advice = 'Укажите карты, банк и ставку'
           this.cards[5].is_open = true
-
-          //место для отправки данных
           break;
         case 5:
           this.name_of_round = 'Turn'
+          this.create_request()
           this.advice = 'Ваш совет - (совет на тёрне). Нажмите ок для продолжения.'
-          //место для получения данных
           break;
         case 6:
           this.name_of_round = 'River'
-          this.advice = 'Укажите карты и нажмите зелёную кнопку'
+          this.advice = 'Укажите карты, банк и ставку'
           this.cards[6].is_open = true
-
-          //место для отправки данных
           break;
         case 7:
           this.name_of_round = 'River'
+          this.create_request()
           this.advice = 'Ваш совет - (совет на ривере). Нажмите ок для продолжения.'
-          //место для получения данных
           break;
         case 8:
           this.name_of_round = 'Конец игры'
           this.advice = 'Игра окончена, нажмите на крестик, чтоб сыграть снова'
           this.btn_availability = false
       }
-      console.log(this.counter)
     },
     validation () {
       let valueArr = this.cards.map((item) => item.card_id)
       let openArr = this.cards.map((item) => item.is_open)
       let isDuplicate = valueArr.some((item, idx) => valueArr.indexOf(item) != idx)
-      if (isDuplicate == true || this.all_cards_is_chosen() == false || this.counter == 8) {
+      if (isDuplicate == true || this.all_cards_is_chosen() == false || this.counter == 8 || this.$refs.bank.value == 0 || this.$refs.bet.value == 0) {
         this.btn_availability = false
       } else {
         this.btn_availability = true
@@ -179,7 +191,7 @@ export default {
     receiveId (id) {
       if (this.cards[id].is_open === true){
         this.temp_id = id
-        this.advice = 'Укажите карты и нажмите зелёную кнопку'
+        this.advice = 'Укажите карты, банк и ставку'
         this.form_visibility = !this.form_visibility
       }
       else {

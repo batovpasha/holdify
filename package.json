@@ -4,6 +4,7 @@
   "description": "A Vue.js project",
   "author": "@fluoxe7ine & @batovpasha",
   "private": true,
+  "proxy": "http://localhost:3000",
   "homepage": "https://github.com/fluoxe7ine/holdify",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
