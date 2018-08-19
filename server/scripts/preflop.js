@@ -6,15 +6,15 @@ const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
 
 const BEST_STARTING_HANDS = ['AA', 'KK', 'QQ', 'JJ', 'AK',
-                             'TT', 'AQ', 'AJ', 'AK', 'KQ',
-                             'AT', 'KJ', 'AQ', '99', 'QJ',
-                             'KT', '88', 'QT', 'A9', 'AJ'];
+                             '1010', 'AQ', 'AJ', 'AK', 'KQ',
+                             'A10', 'KJ', 'AQ', '99', 'QJ',
+                             'K10', '88', 'Q10', 'A9', 'AJ'];
 
 const generateDecision = (currentPocket) => {
   let firstCardRank = RANKS[currentPocket['cards'][0]['rank']]; // rank is an index of card in sorted cards array
   let secondCardRank = RANKS[currentPocket['cards'][1]['rank']];
 
-  let rankDifference = Math.abs(RANKS.indexOf(firstCardRank)
+  let rankDifference = Math.abs(RANKS.indexOf(firstCardRank) // order of distance between ranks of cards
                               - RANKS.indexOf(secondCardRank));
 
   // suit in Hand obj is a number which mean that 20 is clubs suit, 21 is diamonds suit etc
@@ -24,7 +24,8 @@ const generateDecision = (currentPocket) => {
   // four decisions which we can do: raise, call, check and fold
 
   // block of making decisions for raise
-  if (BEST_STARTING_HANDS.includes(firstCardRank + secondCardRank))
+  if (BEST_STARTING_HANDS.includes(firstCardRank + secondCardRank)
+   || BEST_STARTING_HANDS.includes(secondCardRank + firstCardRank))
     return 'Preflop - recommend to raise the bet';
 
   //

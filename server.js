@@ -19,6 +19,7 @@ app.get('/', (req, res) => {
 app.post('/game', (req, res) => {
   let bank  = req.body.bank;
   let bet = req.body.bet;
-  let hand_cards = req.body.hand_cards
-  let table_cards = req.body.table_cards
+  let hand_cards = req.body.hand_cards;
+  let table_cards = req.body.table_cards;
+  console.log(bank, bet, hand_cards, table_cards);
 });
