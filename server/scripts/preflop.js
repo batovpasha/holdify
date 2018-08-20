@@ -11,15 +11,15 @@ const BEST_STARTING_HANDS = ['AA', 'KK', 'QQ', 'JJ', 'AK',
                              'K10', '88', 'Q10', 'A9', 'AJ'];
 
 const generateDecision = (currentPocket) => {
-  let firstCardRank = RANKS[currentPocket['cards'][0]['rank']]; // rank is an index of card in sorted cards array
-  let secondCardRank = RANKS[currentPocket['cards'][1]['rank']];
+  const firstCardRank = RANKS[currentPocket['cards'][0]['rank']]; // rank is an index of card in sorted cards array
+  const secondCardRank = RANKS[currentPocket['cards'][1]['rank']];
 
-  let rankDifference = Math.abs(RANKS.indexOf(firstCardRank) // order of distance between ranks of cards
+  const rankDifference = Math.abs(RANKS.indexOf(firstCardRank) // order of distance between ranks of cards
                               - RANKS.indexOf(secondCardRank));
 
   // suit in Hand obj is a number which mean that 20 is clubs suit, 21 is diamonds suit etc
-  let firstCardSuit = SUITS[currentPocket['cards'][0]['suit'] % 10]; // for find index in suits array we use mod by 10
-  let secondCardSuit = SUITS[currentPocket['cards'][1]['suit'] % 10];
+  const firstCardSuit = SUITS[currentPocket['cards'][0]['suit'] % 10]; // for find index in suits array we use mod by 10
+  const secondCardSuit = SUITS[currentPocket['cards'][1]['suit'] % 10];
 
   // four decisions which we can do: raise, call, check and fold
 
