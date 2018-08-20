@@ -34,7 +34,8 @@ const generateDecision = (pocket, board) => {
   // suit in Hand obj is a number which mean that 20 is clubs suit, 21 is diamonds suit etc
   const firstPocketCardSuit = SUITS[pocket['cards'][0]['suit'] % 10]; // for find index in suits array we use mod by 10
   const secondPocketCardSuit = SUITS[pocket['cards'][1]['suit'] % 10];
-
+  console.log(combination.highestCombination.name);
+  
   // block of making decisions for raise
   if (combination.highestCombination.name === 'straight'
    || combination.highestCombination.name === 'flush'
@@ -47,7 +48,15 @@ const generateDecision = (pocket, board) => {
   //
   //
   //
-
+  
+  // block of making decisions for call
+  if (combination.highestCombination.name === 'two pairs')
+    return 'Flop - recommend to call';
+  
+  //
+  //
+  //
+  
   // block of making decisions for absolutely fold
   if (!isAnySuitMoreThanTwo(pocket, board)
    && !findMinGoodSequence(pocket, board)
