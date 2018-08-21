@@ -1,6 +1,9 @@
 <template>
   <div class="main">
     <PopUp @send_data="parser" v-if="form_visibility"/>
+    <transition name="fade">
+      <WarningPopUp v-if="this.duplicate"/>
+    </transition>
     <div class="row cards">
       <div class="col hand">
         <div class="title">
@@ -29,18 +32,18 @@
         <div class="field-left">
           Банк
         </div>
-        <input class="field-right" type="text" name="" ref="bank" value="0">
+        <input @input="validation()" class="field-right" type="text" name="" ref="bank" value="">
       </div>
       <div class="col field">
         <div class="field-left">
           Ставка
         </div>
-        <input class="field-right" type="text" name="" ref="bet" value="0">
+        <input class="field-right" type="text" name="" ref="bet" value="">
       </div>
     </div>
 
     <div class="footer">
-      <div @click="send_round_data()" v-if="this.btn_availability" class="button button-success">
+      <div @click="send_round_data(); validation()" v-if="this.btn_availability" class="button button-success">
         <img src="../assets/icons/success.svg" alt="">
       </div>
       <div @click="reset()" class="button button-reset">
@@ -69,10 +72,10 @@ export default {
       form_visibility: false,
       temp_id: -1,
       name_of_round: 'Preflop',
-      advice: 'Укажите карты, банк и ставку',
+      advice: 'Укажите карты и банк',
       counter: 0,
-      bank: 0,
-      bet: 0,
+      bank: '',
+      duplicate: false,
       btn_availability: false,
       rounds: ['Preflop', 'Flop', 'Turn', 'River'],
       cards: [
@@ -87,10 +90,10 @@ export default {
     }
   },
   created () {
-
+    this.validation()
   },
-  beforeUpdate () {
-    window.setInterval(() => this.validation(), 300)
+  updated () {
+
   },
   methods: {
     //  create a request that returns an object with such fields as: bank, bet, hand cards and table cards
@@ -121,7 +124,7 @@ export default {
       switch (this.counter) {
         case 0:
           this.name_of_round = 'Preflop'
-          this.advice = 'Укажите карты, банк и ставку'
+          this.advice = 'Укажите карты и банк'
           break
         case 1:
           this.name_of_round = 'Preflop'
@@ -130,7 +133,7 @@ export default {
           break
         case 2:
           this.name_of_round = 'Flop'
-          this.advice = 'Укажите карты, банк и ставку'
+          this.advice = 'Укажите карты и банк'
           this.cards[2].is_open = true
           this.cards[3].is_open = true
           this.cards[4].is_open = true
@@ -142,7 +145,7 @@ export default {
           break
         case 4:
           this.name_of_round = 'Turn'
-          this.advice = 'Укажите карты, банк и ставку'
+          this.advice = 'Укажите карты и банк'
           this.cards[5].is_open = true
           break
         case 5:
@@ -152,7 +155,7 @@ export default {
           break
         case 6:
           this.name_of_round = 'River'
-          this.advice = 'Укажите карты, банк и ставку'
+          this.advice = 'Укажите карты и банк'
           this.cards[6].is_open = true
           break
         case 7:
@@ -170,7 +173,8 @@ export default {
       // checks if the input data is correct
       let valueArr = this.cards.map((item) => item.cardId)
       let isDuplicate = valueArr.some((item, idx) => valueArr.indexOf(item) !== idx)
-      if (isDuplicate === true || this.all_cards_is_chosen() === false || this.counter === 8 || this.$refs.bank.value === '0' || this.$refs.bet.value === '0') {
+      if (isDuplicate) this.advice = 'Вы указали одинаковые карты'
+      if (isDuplicate === true || this.all_cards_is_chosen() === false || this.counter === 8 || this.$refs.bank.value === '') {
         this.btn_availability = false
       } else {
         this.btn_availability = true
@@ -191,11 +195,12 @@ export default {
       // reveive the event data and updating the this.cards object
       this.form_visibility = !this.form_visibility
       this.$set(this.cards, this.temp_id, {suit: suit, rank: rank, is_open: this.cards[this.temp_id].is_open, id: this.temp_id, cardId: cardId})
+      this.validation()
     },
     receiveId (id) {
       if (this.cards[id].is_open === true) {
         this.temp_id = id
-        this.advice = 'Укажите карты, банк и ставку'
+        this.advice = 'Укажите карты и банк'
         this.form_visibility = !this.form_visibility
       } else {
         this.advice = 'В данном раунде эта карта недоступна'
@@ -367,5 +372,11 @@ export default {
           margin-top: 25%
         &:hover
           background: #cc4142
+
+  .fade-enter-active, .fade-leave-active
+    transition: opacity .7s ease
+
+  .fade-enter, .fade-leave-to
+    opacity: 0
 
 </style>
