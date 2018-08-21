@@ -116,7 +116,8 @@ export default {
         hand_cards: this.hand_cards,
         table_cards: this.table_cards
       }
-      this.axios.post('/game', this.data).then(response => console.log(response))
+      this.axios.post('/game', this.data).then(response => this.advice = response.data)
+
     },
     send_round_data () {
       // describes the game process
@@ -129,7 +130,6 @@ export default {
         case 1:
           this.name_of_round = 'Preflop'
           this.create_request()
-          this.advice = 'Ваш совет - (совет на префлопе). Нажмите ок для продолжения.'
           break
         case 2:
           this.name_of_round = 'Flop'
@@ -141,7 +141,6 @@ export default {
         case 3:
           this.name_of_round = 'Flop'
           this.create_request()
-          this.advice = 'Ваш совет - (совет на флопе). Нажмите ок для продолжения.'
           break
         case 4:
           this.name_of_round = 'Turn'
@@ -151,7 +150,6 @@ export default {
         case 5:
           this.name_of_round = 'Turn'
           this.create_request()
-          this.advice = 'Ваш совет - (совет на тёрне). Нажмите ок для продолжения.'
           break
         case 6:
           this.name_of_round = 'River'
@@ -161,7 +159,6 @@ export default {
         case 7:
           this.name_of_round = 'River'
           this.create_request()
-          this.advice = 'Ваш совет - (совет на ривере). Нажмите ок для продолжения.'
           break
         case 8:
           this.name_of_round = 'Конец игры'

@@ -4,6 +4,7 @@ const express = require('express'),
       cors = require('cors'),
       serveStatic = require('serve-static');
 
+const cards_parser = require('./server/scripts/cards_parser.js');
 const app = express();
 app.use(bodyParser.json());
 app.use(serveStatic(__dirname + "/dist"));
@@ -21,5 +22,6 @@ app.post('/game', (req, res) => {
   let bet = req.body.bet;
   let hand_cards = req.body.hand_cards;
   let table_cards = req.body.table_cards;
+  res.send(cards_parser.createCards(hand_cards, table_cards))
   console.log(bank, bet, hand_cards, table_cards);
 });
