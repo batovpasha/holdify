@@ -15,7 +15,7 @@ const generateDecision = (currentPocket) => {
   const secondCardRank = RANKS[currentPocket['cards'][1]['rank']];
 
   const rankDifference = Math.abs(RANKS.indexOf(firstCardRank) // order of distance between ranks of cards
-                              - RANKS.indexOf(secondCardRank));
+                                - RANKS.indexOf(secondCardRank));
 
   // suit in Hand obj is a number which mean that 20 is clubs suit, 21 is diamonds suit etc
   const firstCardSuit = SUITS[currentPocket['cards'][0]['suit'] % 10]; // for find index in suits array we use mod by 10

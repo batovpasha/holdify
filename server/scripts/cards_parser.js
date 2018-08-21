@@ -59,4 +59,4 @@ createCards([{ suit: 'spades', rank: 2 },
             // table cards
             [{ suit: 'spades', rank: 4 },      
              { suit: 'spades', rank: 3 },      
-             { suit: 'spades', rank: 7 }]);    
+             { suit: 'spades', rank: 6 }]);    

@@ -48,7 +48,7 @@ const isAnySuitMoreThanThree = (pocket, board) => {
   [...pocket['cards'], ...board['cards']] // unpack all cards in one array
     .forEach(card => numberOfCurrentSuit[card['suit'] % 10]++); // count every suit using SUITS indexing
   
-  return Math.max(...numberOfCurrentSuit) === 4 ? true : false;
+  return Math.max(...numberOfCurrentSuit) > 3 ? true : false;
 }
 
 const generateDecision = (pocket, board) => {
