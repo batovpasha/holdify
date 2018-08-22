@@ -70,10 +70,10 @@ const generateDecision = (pocket, board) => {
     return 'Flop - recommend to raise, absolutely ' + combination.highestCombination.name;
 
   if (findMinGoodSequenceForRaise(pocket, board)) 
-    return 'Flop - recommend to raise, probable straight';
+    return 'Flop - recommend to raise, 31,5 % for straight in Turn or River';
 
   if (isAnySuitMoreThanThree(pocket, board))
-    return 'Flop - recommend to raise, probable flush';
+    return 'Flop - recommend to raise, 35 % for flush in Turn or River';
   
   //
   //
@@ -87,13 +87,13 @@ const generateDecision = (pocket, board) => {
      (findMinGoodSequence(pocket, board).includes(firstPocketCardRank)
    || findMinGoodSequence(pocket, board).includes(secondPocketCardRank)))
 
-    return 'Flop - try to check, if not - raise the bet, probable straight'
+    return 'Flop - try to check, if not - call the bet, probable straight'
 
   if (isAnySuitMoreThanTwo(pocket, board) && // if we have any suit more or equal than 3 and hand includes this suit 
      (isAnySuitMoreThanTwo(pocket, board) === firstPocketCardSuit
    || isAnySuitMoreThanTwo(pocket, board) === secondPocketCardSuit))
 
-    return 'Flop - try to check, if not - raise the bet, probable flush';
+    return 'Flop - try to check, if not - call the bet, probable flush';
   
   //
   //
