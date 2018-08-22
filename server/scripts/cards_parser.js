@@ -23,6 +23,7 @@ const pack = new Pack();
 */
 
 const createCards = (pocket, board) => { // hand and table are arrays of cards(objects)
+  pack.destroy()
   const pocketCards = new Array(pocket.length);
   const boardCards = new Array(board.length);
 

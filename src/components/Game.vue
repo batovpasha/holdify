@@ -105,19 +105,20 @@ export default {
           this.hand_cards.push({suit: this.cards[i].suit, rank: this.cards[i].rank})
         }
       }
+
       for (let i = 2; i < 7; i++) {
         if (this.cards[i].suit !== 'none') {
           this.table_cards.push({suit: this.cards[i].suit, rank: this.cards[i].rank})
         }
       }
+
       this.data = {
         bank: this.$refs.bank.value,
         bet: this.$refs.bet.value,
         hand_cards: this.hand_cards,
         table_cards: this.table_cards
       }
-      this.axios.post('/game', this.data).then(response => this.advice = response.data)
-
+      this.axios.post('/game', this.data).then(response => { this.advice = response.data })
     },
     send_round_data () {
       // describes the game process

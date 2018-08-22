@@ -22,6 +22,5 @@ app.post('/game', (req, res) => {
   let bet = req.body.bet;
   let hand_cards = req.body.hand_cards;
   let table_cards = req.body.table_cards;
-  res.send(cards_parser.createCards(hand_cards, table_cards))
-  console.log(bank, bet, hand_cards, table_cards);
+  res.send(cards_parser.createCards(hand_cards, table_cards));
 });
