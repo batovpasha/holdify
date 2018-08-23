@@ -3,7 +3,7 @@
 const { Pack, Hand } = require('tx-holdem');
 const preflop = require('./preflop.js');
 const flop = require('./flop.js');
-
+const turn = require('./turn.js');
 
 /*
 cards look like object with two fields: suit and rank
@@ -42,10 +42,10 @@ const createCards = (pocket, board) => { // hand and table are arrays of cards(o
   else if (boardCards.length === 3) // if there are 3 cards on the board - it is a flop
     return flop.generateDecision(currentPocketCards, currentBoardCards);
 
-  /*
   else if (boardCards.length === 4)
-    console.log(turn.generateDecision(currentPocketCards, currentBoardCards));
-
+    return turn.generateDecision(currentPocketCards, currentBoardCards);
+  
+    /*
   else if (boardCards.length === 5)
     console.log(river.generateDecision(currentPocketCards, currentBoardCards));
 

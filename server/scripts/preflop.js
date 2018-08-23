@@ -34,6 +34,11 @@ const generateDecision = (currentPocket) => {
   if (currentPocket.isPair() || (firstCardSuit === secondCardSuit)) // best situations for calling
     return 'Preflop - recommend to call the bet';
 
+  if (rankDifference > 2 && 
+     (RANKS.indexOf(firstCardRank) > 8 ||
+      RANKS.indexOf(secondCardRank) > 8))
+    return 'Preflop - recommend to call the bet';
+  
   //
   //
   //

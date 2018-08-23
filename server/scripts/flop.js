@@ -37,7 +37,7 @@ const findMinGoodSequenceForRaise = (pocket, board) => { // find sequence which 
 
   for (let i = 1; i < ranksArray.length - 2; i++)
     if (ranksArray[i - 1] && ranksArray[i] && ranksArray[i + 1] && ranksArray[i + 2]) // if there are 4 rank in a row then return true
-      return true; // return the sequence
+      return true;
 
   return false;
 }
@@ -70,18 +70,18 @@ const generateDecision = (pocket, board) => {
     return 'Flop - recommend to raise, absolutely ' + combination.highestCombination.name;
 
   if (findMinGoodSequenceForRaise(pocket, board)) 
-    return 'Flop - recommend to raise, probable straight';
+    return 'Flop - recommend to raise, 31,5 % for straight in Turn or River';
 
   if (isAnySuitMoreThanThree(pocket, board))
-    return 'Flop - recommend to raise, probable flush';
+    return 'Flop - recommend to raise, 35 % for flush in Turn or River';
   
+  if (combination.highestCombination.name === 'two pairs')
+    return 'Flop - recommend to raise, we have two pairs, probable full-house';
   //
   //
   //
   
   // block of making decisions for call
-  if (combination.highestCombination.name === 'two pairs')
-    return 'Flop - recommend to raise, we have two pairs, probable full-house';
   
   if (findMinGoodSequence(pocket, board) && // if we have min good sequence(3 el) and hand includes one at least
      (findMinGoodSequence(pocket, board).includes(firstPocketCardRank)
@@ -118,6 +118,7 @@ const generateDecision = (pocket, board) => {
 
     return 'Flop - recommend to fold'; 
   
+  return 'Flop - recommend to fold';
   //
   //
   //
