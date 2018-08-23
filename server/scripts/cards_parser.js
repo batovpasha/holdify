@@ -4,6 +4,7 @@ const { Pack, Hand } = require('tx-holdem');
 const preflop = require('./preflop.js');
 const flop = require('./flop.js');
 const turn = require('./turn.js');
+const river = require('./river.js');
 
 /*
 cards look like object with two fields: suit and rank
@@ -45,10 +46,9 @@ const createCards = (pocket, board) => { // hand and table are arrays of cards(o
   else if (boardCards.length === 4)
     return turn.generateDecision(currentPocketCards, currentBoardCards);
   
-    /*
   else if (boardCards.length === 5)
-    console.log(river.generateDecision(currentPocketCards, currentBoardCards));
-
+    return river.generateDecision(currentPocketCards, currentBoardCards);
+   /*
   else {
     throw new Error('Not enough table cards!');
   }
