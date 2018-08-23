@@ -4,26 +4,26 @@ const { Pack, Hand } = require('tx-holdem');
 const preflop = require('./preflop.js');
 const flop = require('./flop.js');
 
-const pack = new Pack();
 
 /*
-  cards look like object with two fields: suit and rank
+cards look like object with two fields: suit and rank
 
-  {
-    suit: 'clubs',
-    rank: 'K'
-  }
+{
+  suit: 'clubs',
+  rank: 'K'
+}
 
-  {
-    suit: 'diamonds',
-    rank: 'A'
-  }
+{
+  suit: 'diamonds',
+  rank: 'A'
+}
 
-  etc...
+etc...
 */
 
 const createCards = (pocket, board) => { // hand and table are arrays of cards(objects)
-  pack.destroy()
+  const pack = new Pack();
+  
   const pocketCards = new Array(pocket.length);
   const boardCards = new Array(board.length);
 

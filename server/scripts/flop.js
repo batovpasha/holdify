@@ -1,6 +1,6 @@
 'use strict';
 
-const { Pack, Hand, HandsCollection } = require('tx-holdem'); // HandsCollection need for createCombinations method
+const { HandsCollection } = require('tx-holdem'); // HandsCollection need for createCombinations method
 
 const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
@@ -81,19 +81,19 @@ const generateDecision = (pocket, board) => {
   
   // block of making decisions for call
   if (combination.highestCombination.name === 'two pairs')
-    return 'Flop - recommend to call, we have two pairs';
+    return 'Flop - recommend to raise, we have two pairs, probable full-house';
   
   if (findMinGoodSequence(pocket, board) && // if we have min good sequence(3 el) and hand includes one at least
      (findMinGoodSequence(pocket, board).includes(firstPocketCardRank)
    || findMinGoodSequence(pocket, board).includes(secondPocketCardRank)))
 
-    return 'Flop - try to check, if not - raise the bet, probable straight'
+    return 'Flop - try to check, if not - call the bet, probable straight'
 
   if (isAnySuitMoreThanTwo(pocket, board) && // if we have any suit more or equal than 3 and hand includes this suit 
      (isAnySuitMoreThanTwo(pocket, board) === firstPocketCardSuit
    || isAnySuitMoreThanTwo(pocket, board) === secondPocketCardSuit))
 
-    return 'Flop - try to check, if not - raise the bet, probable flush';
+    return 'Flop - try to check, if not - call the bet, probable flush';
   
   //
   //
