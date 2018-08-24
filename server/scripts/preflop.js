@@ -13,7 +13,7 @@ const DECISIONS = {
   call: 'Preflop - recommend to call the bet',
   check: 'Preflop - try to check, if not - recommend to fold',
   fold: 'Preflop - recommend to fold'
-}
+};
 
 const generateDecision = (currentPocket) => {
   const firstCardRank = RANKS[currentPocket['cards'][0]['rank']]; // rank is an index of card in sorted cards array

@@ -5,6 +5,16 @@ const { HandsCollection } = require('tx-holdem'); // HandsCollection need for cr
 const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
 
+const DECISIONS = {
+  absolutelyRaise: 'Flop - recommend to raise, absolutely ',
+  raiseForStraight: 'Flop - recommend to raise, 31,5 % for straight in Turn or River',
+  raiseForFlush: 'Flop - recommend to raise, 35 % for flush in Turn or River',
+  raiseForFullHouse: 'Flop - recommend to raise, we have two pairs, probable full-house',
+  checkForStraight: 'Flop - try to check, if not - call the bet, probable straight',
+  checkForFlush: 'Flop - try to check, if not - call the bet, probable flush',
+  fold: 'Flop - recommend to fold'
+};
+
 const isAnySuitMoreThanTwo = (pocket, board) => {
   const numberOfCurrentSuit = Array.from(new Array(SUITS.length), x => x = 0); // create array with four zeros
 
@@ -14,7 +24,7 @@ const isAnySuitMoreThanTwo = (pocket, board) => {
   return Math.max(...numberOfCurrentSuit) > 2 // if true - return the suit, else return false
        ? SUITS[numberOfCurrentSuit.indexOf(Math.max(...numberOfCurrentSuit))]
        : false;
-}
+};
 
 const findMinGoodSequence = (pocket, board) => { // use some sorting in linear time
   const ranksArray = Array.from(new Array(RANKS.length), x => x = 0);
@@ -40,7 +50,7 @@ const findMinGoodSequenceForRaise = (pocket, board) => { // find sequence which 
       return true;
 
   return false;
-}
+};
 
 const isAnySuitMoreThanThree = (pocket, board) => {
   const numberOfCurrentSuit = Array.from(new Array(SUITS.length), x => x = 0); // create array with four zeros
@@ -49,7 +59,7 @@ const isAnySuitMoreThanThree = (pocket, board) => {
     .forEach(card => numberOfCurrentSuit[card['suit'] % 10]++); // count every suit using SUITS indexing
   
   return Math.max(...numberOfCurrentSuit) > 3 ? true : false;
-}
+};
 
 const generateDecision = (pocket, board) => {
   const combination = HandsCollection.createCombinations(board, pocket); // createCombinations return an obj with information of combination
@@ -67,16 +77,16 @@ const generateDecision = (pocket, board) => {
    || combination.highestCombination.name === 'four of a kind'
    || combination.highestCombination.name === 'straight flush')
 
-    return 'Flop - recommend to raise, absolutely ' + combination.highestCombination.name;
+    return DECISIONS['absolutelyRaise'] + combination.highestCombination.name;
 
   if (findMinGoodSequenceForRaise(pocket, board)) 
-    return 'Flop - recommend to raise, 31,5 % for straight in Turn or River';
+    return DECISIONS['raiseForStraight'];
 
   if (isAnySuitMoreThanThree(pocket, board))
-    return 'Flop - recommend to raise, 35 % for flush in Turn or River';
+    return DECISIONS['raiseForFlush'];
   
   if (combination.highestCombination.name === 'two pairs')
-    return 'Flop - recommend to raise, we have two pairs, probable full-house';
+    return DECISIONS['raiseForFullHouse'];
   //
   //
   //
@@ -87,13 +97,13 @@ const generateDecision = (pocket, board) => {
      (findMinGoodSequence(pocket, board).includes(firstPocketCardRank)
    || findMinGoodSequence(pocket, board).includes(secondPocketCardRank)))
 
-    return 'Flop - try to check, if not - call the bet, probable straight'
+    return DECISIONS['checkForStraight'];
 
   if (isAnySuitMoreThanTwo(pocket, board) && // if we have any suit more or equal than 3 and hand includes this suit 
      (isAnySuitMoreThanTwo(pocket, board) === firstPocketCardSuit
    || isAnySuitMoreThanTwo(pocket, board) === secondPocketCardSuit))
 
-    return 'Flop - try to check, if not - call the bet, probable flush';
+    return DECISIONS['checkForFlush'];
   
   //
   //
@@ -104,21 +114,21 @@ const generateDecision = (pocket, board) => {
    && !findMinGoodSequence(pocket, board)
    && combination.highestCombination.name === 'kicker') // ???
 
-    return 'Flop - recommend to fold';
+    return DECISIONS['fold'];
 
   if (isAnySuitMoreThanTwo(pocket, board) // if isAnySuitMoreThanTwo and the pocket doesn't include this suit
    && isAnySuitMoreThanTwo(pocket, board) !== firstPocketCardSuit
    && isAnySuitMoreThanTwo(pocket, board) !== secondPocketCardSuit)
 
-    return 'Flop - recommend to fold';
+    return DECISIONS['fold'];;
 
   if (findMinGoodSequence(pocket, board) && 
      !findMinGoodSequence(pocket, board).includes(firstPocketCardRank) &&
      !findMinGoodSequence(pocket, board).includes(secondPocketCardRank))
 
-    return 'Flop - recommend to fold'; 
+    return DECISIONS['fold']; 
   
-  return 'Flop - recommend to fold';
+  return DECISIONS['fold'];
 };
 
 module.exports = { generateDecision };

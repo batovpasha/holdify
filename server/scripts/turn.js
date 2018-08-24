@@ -5,6 +5,15 @@ const { HandsCollection } = require('tx-holdem'); // HandsCollection need for cr
 const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
 
+const DECISIONS = {
+  absolutelyRaise: 'Turn - recommend to raise, absolutely ',
+  checkForStraight: 'Turn - recommend to check, if not - call the bet, 31,5 % for straight in River',
+  checkForFlush: 'Turn - recommend to check, if not - call the bet, 35 % for flush in River',
+  callForFullHouse: 'Turn - recommend to call, probable full-house',
+  call: 'Turn - recommend to call',
+  fold: 'Turn - recommend to fold'
+};
+
 const findMinGoodSequenceForCall = (pocket, board) => { // find sequence which includes 4 elements in row
   const ranksArray = Array.from(new Array(RANKS.length), x => x = 0);
   
@@ -16,7 +25,7 @@ const findMinGoodSequenceForCall = (pocket, board) => { // find sequence which i
       return [RANKS[i - 1], RANKS[i], RANKS[i + 1], RANKS[i + 2]];
   
   return false;
-}
+};
 
 const isAnySuitMoreThanThree = (pocket, board) => {
   const numberOfCurrentSuit = Array.from(new Array(SUITS.length), x => x = 0); // create array with four zeros
@@ -27,7 +36,7 @@ const isAnySuitMoreThanThree = (pocket, board) => {
   return Math.max(...numberOfCurrentSuit) > 3 
        ? SUITS[numberOfCurrentSuit.indexOf(Math.max(...numberOfCurrentSuit))]
        : false;
-}
+};
 
 const generateDecision = (pocket, board) => {
   const combination = HandsCollection.createCombinations(board, pocket); // createCombinations return an obj with information of combination
@@ -45,52 +54,52 @@ const generateDecision = (pocket, board) => {
    || combination.highestCombination.name === 'four of a kind'
    || combination.highestCombination.name === 'straight flush')
 
-    return 'Turn - recommend to raise, absolutely ' + combination.highestCombination.name;
+    return DECISIONS['absolutelyRaise'] + combination.highestCombination.name;
 
   // block of making decisions for call and check
   if (findMinGoodSequenceForCall(pocket, board) &&
      (findMinGoodSequenceForCall(pocket, board).includes(firstPocketCardRank)
    || findMinGoodSequenceForCall(pocket, board).includes(secondPocketCardRank))) 
       
-    return 'Turn - recommend to check, if not - call the bet, 31,5 % for straight in River';
+    return DECISIONS['checkForStraight'];
       
 
   if (isAnySuitMoreThanThree(pocket, board) &&
      (isAnySuitMoreThanThree(pocket, board) === firstPocketCardSuit
    || isAnySuitMoreThanThree(pocket, board) === secondPocketCardSuit))
       
-    return 'Turn - recommend to check, if not - call the bet, 35 % for flush in River';
+    return DECISIONS['checkForFlush'];
  
   if (combination.highestCombination.name === 'two pairs' && !board.isTwoPairs()) // we have two pairs but not all on board
-    return 'Turn - recommend to call, probable full-house';
+    return DECISIONS['callForFullHouse'];
   
   if (findMinGoodSequenceForCall(pocket, board) &&
      !findMinGoodSequenceForCall(pocket, board).includes(firstPocketCardRank) &&
      !findMinGoodSequenceForCall(pocket, board).includes(secondPocketCardRank) &&
      pocket.isPair())
-    return 'Turn - recommend to call';
+    return DECISIONS['call'];
   
   if (isAnySuitMoreThanThree(pocket, board) &&
       isAnySuitMoreThanThree(pocket, board) !== firstPocketCardSuit &&
       isAnySuitMoreThanThree(pocket, board) !== secondPocketCardSuit &&
       pocket.isPair())
-    return 'Turn - recommend to call';
+    return DECISIONS['call'];
 
   // block of making decisions for absolutely fold
   if (findMinGoodSequenceForCall(pocket, board) &&
      !findMinGoodSequenceForCall(pocket, board).includes(firstPocketCardRank) &&
      !findMinGoodSequenceForCall(pocket, board).includes(secondPocketCardRank))
-    return 'Turn - recommend to fold';
+    return DECISIONS['fold'];
 
   if (isAnySuitMoreThanThree(pocket, board) &&
       isAnySuitMoreThanThree(pocket, board) !== firstPocketCardSuit &&
       isAnySuitMoreThanThree(pocket, board) !== secondPocketCardSuit)  
-    return 'Turn - recommend to fold';
+    return DECISIONS['fold'];
   
-  if (board.isThreeOfKing())
-    return 'Turn - recommend to fold';  
+  if (board.isThreeOfKind())
+    return DECISIONS['fold'];  
     
-  return 'Turn - recommend to fold';
+  return DECISIONS['fold'];
 } 
 
 module.exports = { generateDecision };
