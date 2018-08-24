@@ -8,6 +8,13 @@ const BEST_STARTING_HANDS = ['AA', 'KK', 'QQ', 'JJ', 'AK',
                              'A10', 'KJ', 'AQ', '99', 'QJ',
                              'K10', '88', 'Q10', 'A9', 'AJ'];
 
+const DECISIONS = {
+  raise: 'Preflop - recommend to raise the bet',
+  call: 'Preflop - recommend to call the bet',
+  check: 'Preflop - try to check, if not - recommend to fold',
+  fold: 'Preflop - recommend to fold'
+}
+
 const generateDecision = (currentPocket) => {
   const firstCardRank = RANKS[currentPocket['cards'][0]['rank']]; // rank is an index of card in sorted cards array
   const secondCardRank = RANKS[currentPocket['cards'][1]['rank']];
@@ -24,7 +31,7 @@ const generateDecision = (currentPocket) => {
   // block of making decisions for raise
   if (BEST_STARTING_HANDS.includes(firstCardRank + secondCardRank)
    || BEST_STARTING_HANDS.includes(secondCardRank + firstCardRank))
-    return 'Preflop - recommend to raise the bet';
+    return DECISIONS['raise'];
 
   //
   //
@@ -32,12 +39,12 @@ const generateDecision = (currentPocket) => {
 
   // block of making decisions for call
   if (currentPocket.isPair() || (firstCardSuit === secondCardSuit)) // best situations for calling
-    return 'Preflop - recommend to call the bet';
+    return DECISIONS['call'];
 
   if (rankDifference > 2 && 
      (RANKS.indexOf(firstCardRank) > 8 ||
       RANKS.indexOf(secondCardRank) > 8))
-    return 'Preflop - recommend to call the bet';
+    return DECISIONS['call'];
   
   //
   //
@@ -45,10 +52,10 @@ const generateDecision = (currentPocket) => {
 
   // block of making decisions for checking and fold
   if (rankDifference <= 2)
-    return 'Preflop - try to check, if not - recommend to fold';
+    return DECISIONS['check'];
 
   if (rankDifference > 2)
-    return 'Preflop - recommend to fold';
+    return DECISIONS['fold'];
 
   //
   //

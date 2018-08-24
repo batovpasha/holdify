@@ -63,7 +63,19 @@ const generateDecision = (pocket, board) => {
  
   if (combination.highestCombination.name === 'two pairs' && !board.isTwoPairs()) // we have two pairs but not all on board
     return 'Turn - recommend to call, probable full-house';
- 
+  
+  if (findMinGoodSequenceForCall(pocket, board) &&
+     !findMinGoodSequenceForCall(pocket, board).includes(firstPocketCardRank) &&
+     !findMinGoodSequenceForCall(pocket, board).includes(secondPocketCardRank) &&
+     pocket.isPair())
+    return 'Turn - recommend to call';
+  
+  if (isAnySuitMoreThanThree(pocket, board) &&
+      isAnySuitMoreThanThree(pocket, board) !== firstPocketCardSuit &&
+      isAnySuitMoreThanThree(pocket, board) !== secondPocketCardSuit &&
+      pocket.isPair())
+    return 'Turn - recommend to call';
+
   // block of making decisions for absolutely fold
   if (findMinGoodSequenceForCall(pocket, board) &&
      !findMinGoodSequenceForCall(pocket, board).includes(firstPocketCardRank) &&

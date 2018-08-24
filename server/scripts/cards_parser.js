@@ -48,18 +48,6 @@ const createCards = (pocket, board) => { // hand and table are arrays of cards(o
   
   else if (boardCards.length === 5)
     return river.generateDecision(currentPocketCards, currentBoardCards);
-   /*
-  else {
-    throw new Error('Not enough table cards!');
-  }
-  */
 }
-            // hand cards
-// createCards([{ suit: 'spades', rank: 2 },
-//              { suit: 'spades', rank: 5 }],
-//             // table cards
-//             [{ suit: 'spades', rank: 4 },
-//              { suit: 'spades', rank: 3 },
-//              { suit: 'spades', rank: 7 }]);
 
 module.exports = { createCards };
