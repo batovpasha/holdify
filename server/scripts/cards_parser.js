@@ -22,7 +22,7 @@ cards look like object with two fields: suit and rank
 etc...
 */
 
-const createCards = (pocket, board) => { // hand and table are arrays of cards(objects)
+const createCards = (pocket, board, bank) => { // hand and table are arrays of cards(objects)
   const pack = new Pack();
   
   const pocketCards = new Array(pocket.length);
@@ -38,16 +38,16 @@ const createCards = (pocket, board) => { // hand and table are arrays of cards(o
   const currentBoardCards = new Hand(boardCards); // similar, create table cards obj using boardCards array
 
   if (!boardCards.length) // if no cards on table then it is a preflop
-    return preflop.generateDecision(currentPocketCards); // in preflop are not table cards
+    return preflop.generateDecision(currentPocketCards, bank); // in preflop are not table cards
 
   else if (boardCards.length === 3) // if there are 3 cards on the board - it is a flop
-    return flop.generateDecision(currentPocketCards, currentBoardCards);
+    return flop.generateDecision(currentPocketCards, currentBoardCards, bank);
 
   else if (boardCards.length === 4)
-    return turn.generateDecision(currentPocketCards, currentBoardCards);
+    return turn.generateDecision(currentPocketCards, currentBoardCards, bank);
   
   else if (boardCards.length === 5)
-    return river.generateDecision(currentPocketCards, currentBoardCards);
+    return river.generateDecision(currentPocketCards, currentBoardCards, bank);
 }
 
 module.exports = { createCards };

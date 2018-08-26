@@ -9,13 +9,17 @@ const BEST_STARTING_HANDS = ['AA', 'KK', 'QQ', 'JJ', 'AK',
                              'K10', '88', 'Q10', 'A9', 'AJ'];
 
 const DECISIONS = {
-  raise: 'Preflop - recommend to raise the bet',
-  call: 'Preflop - recommend to call the bet',
-  check: 'Preflop - try to check, if not - recommend to fold',
-  fold: 'Preflop - recommend to fold'
+  raise: 'Сейчас стоит повысить ставку',
+  call: 'Рекомендуем уравнять ставку',
+  check: 'Сейчас стоит сделать чек, если же не получится - лучше скинуть карты',
+  fold: 'Рекомендуем скинуть карты'
 };
 
-const generateDecision = (currentPocket) => {
+const calculateBet = {
+  
+};
+
+const generateDecision = (currentPocket, bank) => {
   const firstCardRank = RANKS[currentPocket['cards'][0]['rank']]; // rank is an index of card in sorted cards array
   const secondCardRank = RANKS[currentPocket['cards'][1]['rank']];
 

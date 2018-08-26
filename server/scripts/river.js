@@ -6,9 +6,9 @@ const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
 
 const DECISIONS = {
-  raise: 'River - recommend to raise',
-  call: 'River - recommend to call',
-  fold: 'River - recommend to fold'
+  raise: 'Рекомендуем повысить ставку',
+  call: 'Сейчас стоит уравнять ставку',
+  fold: 'Рекомендуем сбросить карты'
 };
 
 const findStraight = (pocket, board) => {
@@ -35,7 +35,7 @@ const findFlush = (pocket, board) => {
        : false;
 };
 
-const generateDecision = (pocket, board) => {
+const generateDecision = (pocket, board, bank) => {
   const combination = HandsCollection.createCombinations(board, pocket); // createCombinations return an obj with information of combination
   // suit in Hand obj is a number which mean that 20 is clubs suit, 21 is diamonds suit etc
   const firstPocketCardSuit = SUITS[pocket['cards'][0]['suit'] % 10]; // for find index in suits array we use mod by 10

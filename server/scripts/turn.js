@@ -6,12 +6,12 @@ const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
 
 const DECISIONS = {
-  absolutelyRaise: 'Turn - recommend to raise, absolutely ',
-  checkForStraight: 'Turn - recommend to check, if not - call the bet, 31,5 % for straight in River',
-  checkForFlush: 'Turn - recommend to check, if not - call the bet, 35 % for flush in River',
-  callForFullHouse: 'Turn - recommend to call, probable full-house',
-  call: 'Turn - recommend to call',
-  fold: 'Turn - recommend to fold'
+  absolutelyRaise: 'Сейчас стоит повысить ставку, 100 % ',
+  checkForStraight: 'Рекомендуем уравнять ставку, 31,5 % шанс для Стрита в Ривере',
+  checkForFlush: 'Рекомендуем уравнять ставку, 35 % шанс для Флеша в Ривере',
+  callForFullHouse: 'Сейчас стоит уравнять ставку, возможный Фулл-хаус',
+  call: 'Сейчас стоит уравнять ставку',
+  fold: 'Рекомендуем сбросить карты'
 };
 
 const findMinGoodSequenceForCall = (pocket, board) => { // find sequence which includes 4 elements in row
@@ -38,8 +38,28 @@ const isAnySuitMoreThanThree = (pocket, board) => {
        : false;
 };
 
-const generateDecision = (pocket, board) => {
+const translateCombinationName = (name) => {
+  switch(name) {
+    case 'straight':
+      return 'Стрит';
+    
+    case 'flush':
+      return 'Флеш';
+
+    case 'full-house':
+      return 'Фулл-хаус';
+
+    case 'four of a kind':
+      return 'Каре';
+      
+    case 'straight flush':
+      return 'Стрит-Флеш';  
+  }
+}
+
+const generateDecision = (pocket, board, bank) => {
   const combination = HandsCollection.createCombinations(board, pocket); // createCombinations return an obj with information of combination
+  const highestCombination = combination.highestCombination.name;
   // suit in Hand obj is a number which mean that 20 is clubs suit, 21 is diamonds suit etc
   const firstPocketCardSuit = SUITS[pocket['cards'][0]['suit'] % 10]; // for find index in suits array we use mod by 10
   const secondPocketCardSuit = SUITS[pocket['cards'][1]['suit'] % 10];
@@ -54,7 +74,7 @@ const generateDecision = (pocket, board) => {
    || combination.highestCombination.name === 'four of a kind'
    || combination.highestCombination.name === 'straight flush')
 
-    return DECISIONS['absolutelyRaise'] + combination.highestCombination.name;
+    return DECISIONS['absolutelyRaise'] + translateCombinationName(highestCombination);
 
   // block of making decisions for call and check
   if (findMinGoodSequenceForCall(pocket, board) &&
