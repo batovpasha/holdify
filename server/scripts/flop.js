@@ -12,6 +12,7 @@ const DECISIONS = {
   raiseForFullHouse: 'Сейчас стоит повысить ставку, имеем две пары, возможный Фулл-хаус',
   checkForStraight: 'Попробуйте сделать чек, если нет - уровняйте ставку, возможный Стрит',
   checkForFlush: 'Попробуйте сделать чек, если нет - уровняйте ставку, возможный Флеш',
+  callForThreeOfKind: 'Рекомендуем уравнять ставку, возможное Каре',
   fold: 'Рекомендуем скинуть карты'
 };
 
@@ -107,6 +108,7 @@ const generateDecision = (pocket, board, bank) => {
   
   if (combination.highestCombination.name === 'two pairs')
     return DECISIONS['raiseForFullHouse'];
+
   //
   //
   //
@@ -125,6 +127,10 @@ const generateDecision = (pocket, board, bank) => {
 
     return DECISIONS['checkForFlush'];
   
+  if (combination.highestCombination.name === 'three of kind' && 
+     !board.isThreeOfKind())
+    
+    return DECISIONS['callForThreeOfKind'];
   //
   //
   //
@@ -147,6 +153,9 @@ const generateDecision = (pocket, board, bank) => {
      !findMinGoodSequence(pocket, board).includes(secondPocketCardRank))
 
     return DECISIONS['fold']; 
+  
+  if (board.isThreeOfKind())
+    return DECISIONS['fold'];
   
   return DECISIONS['fold'];
 };

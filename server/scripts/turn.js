@@ -11,7 +11,8 @@ const DECISIONS = {
   checkForFlush: 'Рекомендуем уравнять ставку, 35 % шанс для Флеша в Ривере',
   callForFullHouse: 'Сейчас стоит уравнять ставку, возможный Фулл-хаус',
   call: 'Сейчас стоит уравнять ставку',
-  fold: 'Рекомендуем сбросить карты'
+  fold: 'Рекомендуем сбросить карты',
+  callForThreeOfKind: 'Рекомендуем уравнять ставку, возможное Каре'
 };
 
 const findMinGoodSequenceForCall = (pocket, board) => { // find sequence which includes 4 elements in row
@@ -105,6 +106,10 @@ const generateDecision = (pocket, board, bank) => {
       pocket.isPair())
     return DECISIONS['call'];
 
+  if (combination.highestCombination.name === 'three of kind' && 
+     !board.isThreeOfKind())
+   
+    return DECISIONS['callForThreeOfKind'];  
   // block of making decisions for absolutely fold
   if (findMinGoodSequenceForCall(pocket, board) &&
      !findMinGoodSequenceForCall(pocket, board).includes(firstPocketCardRank) &&

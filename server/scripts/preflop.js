@@ -11,7 +11,7 @@ const BEST_STARTING_HANDS = ['AA', 'KK', 'QQ', 'JJ', 'AK',
 const DECISIONS = {
   raise: 'Сейчас стоит повысить ставку',
   call: 'Рекомендуем уравнять ставку',
-  check: 'Сейчас стоит сделать чек, если же не получится - лучше скинуть карты',
+  check: 'Сейчас cтоит уравнять ставку',
   fold: 'Рекомендуем скинуть карты'
 };
 
@@ -55,10 +55,10 @@ const generateDecision = (currentPocket, bank) => {
   //
 
   // block of making decisions for checking and fold
-  if (rankDifference <= 2)
+  if (rankDifference < 2)
     return DECISIONS['check'];
 
-  if (rankDifference > 2)
+  if (rankDifference >= 2)
     return DECISIONS['fold'];
 
   //
