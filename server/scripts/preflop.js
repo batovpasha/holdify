@@ -15,8 +15,20 @@ const DECISIONS = {
   fold: 'Рекомендуем скинуть карты'
 };
 
-const calculateBet = {
-  
+const calculateBetForDecision = (decision, bank) => {
+  switch(decision) {
+    case DECISIONS['raise']:
+      return { decision: DECISIONS['raise'], bet: Math.round((bank * 2) / 3) };
+    
+    case DECISIONS['call']:
+      return { decision: DECISIONS['call'], bet: null };
+
+    case DECISIONS['check']:
+      return { decision: DECISIONS['check'], bet: null };
+
+    case DECISIONS['fold']:
+      return { decision: DECISIONS['fold'], bet: null };  
+  }
 };
 
 const generateDecision = (currentPocket, bank) => {
@@ -35,7 +47,7 @@ const generateDecision = (currentPocket, bank) => {
   // block of making decisions for raise
   if (BEST_STARTING_HANDS.includes(firstCardRank + secondCardRank)
    || BEST_STARTING_HANDS.includes(secondCardRank + firstCardRank))
-    return DECISIONS['raise'];
+    return calculateBetForDecision(DECISIONS['raise'], bank);
 
   //
   //
@@ -43,12 +55,12 @@ const generateDecision = (currentPocket, bank) => {
 
   // block of making decisions for call
   if (currentPocket.isPair() || (firstCardSuit === secondCardSuit)) // best situations for calling
-    return DECISIONS['call'];
+    return calculateBetForDecision(DECISIONS['call'], bank);
 
   if (rankDifference > 2 && 
      (RANKS.indexOf(firstCardRank) > 8 ||
       RANKS.indexOf(secondCardRank) > 8))
-    return DECISIONS['call'];
+    return calculateBetForDecision(DECISIONS['call'], bank);
   
   //
   //
@@ -56,14 +68,15 @@ const generateDecision = (currentPocket, bank) => {
 
   // block of making decisions for checking and fold
   if (rankDifference < 2)
-    return DECISIONS['check'];
+    return calculateBetForDecision(DECISIONS['check'], bank);
 
   if (rankDifference >= 2)
-    return DECISIONS['fold'];
+    return calculateBetForDecision(DECISIONS['fold'], bank);
 
-  //
-  //
-  //
+    //
+    //
+    //
+  return calculateBetForDecision(DECISIONS['fold'], bank);   
 };
 
 module.exports = { generateDecision };

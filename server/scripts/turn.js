@@ -15,6 +15,31 @@ const DECISIONS = {
   callForThreeOfKind: 'Рекомендуем уравнять ставку, возможное Каре'
 };
 
+const calculateBetForDecision = (decision, bank, combinationName) => {
+  switch(decision) {
+    case DECISIONS['absolutelyRaise']:
+      return { decision: DECISIONS['absolutelyRaise'] + combinationName, bet: bank };
+    
+    case DECISIONS['checkForStraight']:
+      return { decision: DECISIONS['checkForStraight'], bet: Math.round(bank / 2) };
+    
+    case DECISIONS['checkForFlush']:
+      return { decision: DECISIONS['checkForFlush'], bet: Math.round(bank / 2) };
+
+    case DECISIONS['callForFullHouse']:
+      return { decision: DECISIONS['callForFullHouse'], bet: null };
+
+    case DECISIONS['call']:
+      return { decision: DECISIONS['call'], bet: null };
+    
+    case DECISIONS['fold']:
+      return { decision: DECISIONS['fold'], bet: null };
+    
+    case DECISIONS['callForThreeOfKind']:
+      return { decision: DECISIONS['callForFullHouse'], bet: null };
+  }
+};
+
 const findMinGoodSequenceForCall = (pocket, board) => { // find sequence which includes 4 elements in row
   const ranksArray = Array.from(new Array(RANKS.length), x => x = 0);
   
@@ -56,7 +81,7 @@ const translateCombinationName = (name) => {
     case 'straight flush':
       return 'Стрит-Флеш';  
   }
-}
+};
 
 const generateDecision = (pocket, board, bank) => {
   const combination = HandsCollection.createCombinations(board, pocket); // createCombinations return an obj with information of combination
@@ -68,6 +93,10 @@ const generateDecision = (pocket, board, bank) => {
   const firstPocketCardRank = RANKS[pocket['cards'][0]['rank']];
   const secondPocketCardRank = RANKS[pocket['cards'][1]['rank']];
 
+  // block of making decisions for absolutely fold
+  if ((board.isTwoPairs() || board.isFourOfKind()) && !pocket.isPair())
+    return calculateBetForDecision(DECISIONS['fold'], bank);
+
   // block of making decisions for raise
   if (combination.highestCombination.name === 'straight'
    || combination.highestCombination.name === 'flush'
@@ -75,56 +104,58 @@ const generateDecision = (pocket, board, bank) => {
    || combination.highestCombination.name === 'four of a kind'
    || combination.highestCombination.name === 'straight flush')
 
-    return DECISIONS['absolutelyRaise'] + translateCombinationName(highestCombination);
+    return calculateBetForDecision(DECISIONS['absolutelyRaise'], 
+                                   bank, 
+                                   translateCombinationName(highestCombination));
 
   // block of making decisions for call and check
   if (findMinGoodSequenceForCall(pocket, board) &&
      (findMinGoodSequenceForCall(pocket, board).includes(firstPocketCardRank)
    || findMinGoodSequenceForCall(pocket, board).includes(secondPocketCardRank))) 
       
-    return DECISIONS['checkForStraight'];
+    return calculateBetForDecision(DECISIONS['checkForStraight'], bank);
       
 
   if (isAnySuitMoreThanThree(pocket, board) &&
      (isAnySuitMoreThanThree(pocket, board) === firstPocketCardSuit
    || isAnySuitMoreThanThree(pocket, board) === secondPocketCardSuit))
       
-    return DECISIONS['checkForFlush'];
+    return calculateBetForDecision(DECISIONS['checkForFlush'], bank);
  
   if (combination.highestCombination.name === 'two pairs' && !board.isTwoPairs()) // we have two pairs but not all on board
-    return DECISIONS['callForFullHouse'];
+    return calculateBetForDecision(DECISIONS['callForFullHouse'], bank);
   
   if (findMinGoodSequenceForCall(pocket, board) &&
      !findMinGoodSequenceForCall(pocket, board).includes(firstPocketCardRank) &&
      !findMinGoodSequenceForCall(pocket, board).includes(secondPocketCardRank) &&
      pocket.isPair())
-    return DECISIONS['call'];
+    return calculateBetForDecision(DECISIONS['call'], bank);
   
   if (isAnySuitMoreThanThree(pocket, board) &&
       isAnySuitMoreThanThree(pocket, board) !== firstPocketCardSuit &&
       isAnySuitMoreThanThree(pocket, board) !== secondPocketCardSuit &&
       pocket.isPair())
-    return DECISIONS['call'];
+    return calculateBetForDecision(DECISIONS['call'], bank);
 
   if (combination.highestCombination.name === 'three of kind' && 
      !board.isThreeOfKind())
    
-    return DECISIONS['callForThreeOfKind'];  
+    return calculateBetForDecision(DECISIONS['callForThreeOfKind'], bank);
   // block of making decisions for absolutely fold
   if (findMinGoodSequenceForCall(pocket, board) &&
      !findMinGoodSequenceForCall(pocket, board).includes(firstPocketCardRank) &&
      !findMinGoodSequenceForCall(pocket, board).includes(secondPocketCardRank))
-    return DECISIONS['fold'];
+    return calculateBetForDecision(DECISIONS['fold'], bank);
 
   if (isAnySuitMoreThanThree(pocket, board) &&
       isAnySuitMoreThanThree(pocket, board) !== firstPocketCardSuit &&
       isAnySuitMoreThanThree(pocket, board) !== secondPocketCardSuit)  
-    return DECISIONS['fold'];
-  
+    return calculateBetForDecision(DECISIONS['fold'], bank);
+
   if (board.isThreeOfKind())
-    return DECISIONS['fold'];  
+    return calculateBetForDecision(DECISIONS['fold'], bank); 
     
-  return DECISIONS['fold'];
+  return calculateBetForDecision(DECISIONS['fold'], bank);
 } 
 
 module.exports = { generateDecision };

@@ -20,9 +20,8 @@ app.get('/', (req, res) => {
 
 app.post('/game', (req, res) => {
   let bank  = req.body.bank;
-  let bet = req.body.bet;
   let pocket_cards = req.body.hand_cards;
   let board_cards = req.body.table_cards;
   
-  res.send(cards_parser.createCards(pocket_cards, board_cards));
+  res.send(cards_parser.createCards(pocket_cards, board_cards, bank));
 });

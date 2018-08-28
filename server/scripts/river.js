@@ -6,6 +6,7 @@ const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
 
 const DECISIONS = {
+  absolutelyRaise: 'Сейчас стоит повысить ставку, 100 % ',
   raise: 'Рекомендуем повысить ставку',
   call: 'Сейчас стоит уравнять ставку',
   fold: 'Рекомендуем сбросить карты'
@@ -35,8 +36,44 @@ const findFlush = (pocket, board) => {
        : false;
 };
 
+const calculateBetForDecision = (decision, bank, combinationName) => {
+  switch(decision) {
+    case DECISIONS['absolutelyRaise']:
+      return { decision: DECISIONS['absolutelyRaise'] + combinationName, bet: bank };
+    
+    case DECISIONS['raise']:
+      return { decision: DECISIONS['raise'], bet : (bank * 2) / 3 };
+
+    case DECISIONS['call']:
+      return { decision: DECISIONS['call'], bet : null };
+    
+    case DECISIONS['fold']:
+      return { decision: DECISIONS['fold'], bet : null };
+  }
+};
+
+const translateCombinationName = (name) => {
+  switch(name) {
+    case 'straight':
+      return 'Стрит';
+    
+    case 'flush':
+      return 'Флеш';
+
+    case 'full-house':
+      return 'Фулл-хаус';
+
+    case 'four of a kind':
+      return 'Каре';
+      
+    case 'straight flush':
+      return 'Стрит-Флеш';  
+  }
+};
+
 const generateDecision = (pocket, board, bank) => {
   const combination = HandsCollection.createCombinations(board, pocket); // createCombinations return an obj with information of combination
+  const highestCombination = combination.highestCombination.name;
   // suit in Hand obj is a number which mean that 20 is clubs suit, 21 is diamonds suit etc
   const firstPocketCardSuit = SUITS[pocket['cards'][0]['suit'] % 10]; // for find index in suits array we use mod by 10
   const secondPocketCardSuit = SUITS[pocket['cards'][1]['suit'] % 10];
@@ -44,21 +81,37 @@ const generateDecision = (pocket, board, bank) => {
   const firstPocketCardRank = RANKS[pocket['cards'][0]['rank']];
   const secondPocketCardRank = RANKS[pocket['cards'][1]['rank']];
 
+  // block of making decisions for absolutely fold
+  if ((board.isTwoPairs() || board.isThreeOfKind() || board.isStraight() ||
+       board.isFlush() || board.isFullHouse() || board.isFourOfKind() ||
+       board.isStraightFlush() || board.isRoyalFlush()) && !pocket.isPair())
+    return calculateBetForDecision(DECISIONS['fold'], bank);
+
   // block of making decisions for raise
+  if (combination.highestCombination.name === 'straight'
+   || combination.highestCombination.name === 'flush'
+   || combination.highestCombination.name === 'full-house'
+   || combination.highestCombination.name === 'four of a kind'
+   || combination.highestCombination.name === 'straight flush')
+
+    return calculateBetForDecision(DECISIONS['absolutelyRaise'], 
+                                   bank, 
+                                   translateCombinationName(highestCombination));
+  
   if (findStraight(pocket, board) &&
       findStraight(pocket, board).includes(firstPocketCardRank) &&
       findStraight(pocket, board).includes(secondPocketCardRank))
-    return DECISIONS['raise'];  
+    return calculateBetForDecision(DECISIONS['raise'], bank);
   
   if (findFlush(pocket, board) &&
       findFlush(pocket, board) === firstPocketCardSuit &&
       findFlush(pocket, board) === secondPocketCardSuit)
-    return DECISIONS['raise'];
+    return calculateBetForDecision(DECISIONS['raise'], bank);
 
   if (pocket.isPair() && (board.isStraight() || board.isFlush() || 
                           board.isFullHouse() || board.isFourOfKind() || 
                           board.isStraightFlush() || board.isRoyalFlush()))
-    return DECISIONS['raise'];
+    return calculateBetForDecision(DECISIONS['raise'], bank);
 
   // block for making decisions for call
   if (findStraight(pocket, board) &&
@@ -66,16 +119,16 @@ const generateDecision = (pocket, board, bank) => {
      !findStraight(pocket, board).includes(secondPocketCardRank)) || 
      (findStraight(pocket, board).includes(secondPocketCardRank) && 
      !findStraight(pocket, board).includes(firstPocketCardRank))))
-    return DECISIONS['call'];
+    return calculateBetForDecision(DECISIONS['call'], bank);
     
   if (findFlush(pocket, board) &&
      (findFlush(pocket, board) === firstPocketCardSuit &&
       findFlush(pocket, board) !== secondPocketCardSuit) ||
      (findFlush(pocket, board) !== firstPocketCardSuit &&
       findFlush(pocket, board) === secondPocketCardSuit))
-    return DECISIONS['call'];
+    return calculateBetForDecision(DECISIONS['call'], bank);
     
-  return DECISIONS['fold'];    
+  return calculateBetForDecision(DECISIONS['fold'], bank);   
 };
 
 module.exports = { generateDecision };
