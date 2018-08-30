@@ -12,6 +12,18 @@ const DECISIONS = {
   fold: 'Рекомендуем сбросить карты'
 };
 
+const findPairForFourOfKind = (arrayOfPocketRanks, board) => { // if board combination is four of a kind and we have a pair
+  const arrayOfBoardRanks = [];
+
+  board['cards'].forEach(card => arrayOfBoardRanks.push(RANKS[card['rank']]));
+
+  if (arrayOfBoardRanks.includes(arrayOfPocketRanks[0]) || 
+      arrayOfBoardRanks.includes(arrayOfPocketRanks[1]))
+    return true;
+  
+  else return false;
+};
+
 const findStraight = (pocket, board) => {
   const ranksArray = Array.from(new Array(RANKS.length), x => x = 0);
   
@@ -42,7 +54,7 @@ const calculateBetForDecision = (decision, bank, combinationName) => {
       return { decision: DECISIONS['absolutelyRaise'] + combinationName, bet: bank };
     
     case DECISIONS['raise']:
-      return { decision: DECISIONS['raise'], bet : (bank * 2) / 3 };
+      return { decision: DECISIONS['raise'], bet : Math.round((bank * 2) / 3) };
 
     case DECISIONS['call']:
       return { decision: DECISIONS['call'], bet : '-' };
@@ -80,24 +92,22 @@ const generateDecision = (pocket, board, bank) => {
       
   const firstPocketCardRank = RANKS[pocket['cards'][0]['rank']];
   const secondPocketCardRank = RANKS[pocket['cards'][1]['rank']];
-
-  // block of making decisions for absolutely fold
-  if ((board.isTwoPairs() || board.isThreeOfKind() || board.isStraight() ||
-       board.isFlush() || board.isFullHouse() || board.isFourOfKind() ||
-       board.isStraightFlush() || board.isRoyalFlush()) && !pocket.isPair())
-    return calculateBetForDecision(DECISIONS['fold'], bank);
-
+  findPairForFourOfKind([firstPocketCardRank, secondPocketCardRank], board);
   // block of making decisions for raise
-  if (combination.highestCombination.name === 'straight'
-   || combination.highestCombination.name === 'flush'
-   || combination.highestCombination.name === 'full-house'
-   || combination.highestCombination.name === 'four of a kind'
-   || combination.highestCombination.name === 'straight flush')
+  if ((combination.highestCombination.name === 'straight' && !board.isStraight())
+   || (combination.highestCombination.name === 'flush' && !board.isFlush())
+   || (combination.highestCombination.name === 'full-house' && !board.isFullHouse())
+   || (combination.highestCombination.name === 'four of a kind' && !board.isFourOfKind())
+   || (combination.highestCombination.name === 'straight flush' && !board.isStraightFlush()))
 
     return calculateBetForDecision(DECISIONS['absolutelyRaise'], 
                                    bank, 
                                    translateCombinationName(highestCombination));
   
+  if (board.isFourOfKind() && 
+      findPairForFourOfKind([firstPocketCardRank, secondPocketCardRank], board))
+    return calculateBetForDecision(DECISIONS['raise'], bank);
+
   if (findStraight(pocket, board) &&
       findStraight(pocket, board).includes(firstPocketCardRank) &&
       findStraight(pocket, board).includes(secondPocketCardRank))

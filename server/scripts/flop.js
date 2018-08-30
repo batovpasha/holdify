@@ -161,7 +161,7 @@ const generateDecision = (pocket, board, bank) => {
 
     return calculateBetForDecision(DECISIONS['checkForFlush'], bank);
   
-  if (combination.highestCombination.name === 'three of kind' && 
+  if (combination.highestCombination.name === 'three of a kind' && 
      !board.isThreeOfKind())
     
     return calculateBetForDecision(DECISIONS['callForThreeOfKind'], bank);
