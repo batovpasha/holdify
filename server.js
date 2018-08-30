@@ -14,10 +14,6 @@ app.listen(3000, () => {
   console.log('Server starts correctly');
 });
 
-app.get('/', (req, res) => {
-
-});
-
 app.post('/game', (req, res) => {
   let bank  = req.body.bank;
   let pocket_cards = req.body.hand_cards;

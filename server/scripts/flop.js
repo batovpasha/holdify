@@ -7,11 +7,13 @@ const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
 
 const DECISIONS = {
   absolutelyRaise: 'Сейчас стоит повысить ставку, 100 % ',
+  raiseForStraightFlush: 'Сейчас стоит повысить ставку, вероятный Стрит-Флеш',
   raiseForStraight: 'Рекомендуем повысить ставку, 31,5 % шанс для Стрита в Тёрне или Ривере',
   raiseForFlush: 'Рекомендуем повысить ставку, 35 % шанс для Флеша в Тёрне или Ривере',
   raiseForFullHouse: 'Сейчас стоит повысить ставку, имеем две пары, возможный Фулл-хаус',
   checkForStraight: 'Попробуйте сделать чек, если нет - уровняйте ставку, возможный Стрит',
   checkForFlush: 'Попробуйте сделать чек, если нет - уровняйте ставку, возможный Флеш',
+  callForStraightFlush: 'Рекомендуем уравнять ставку, возможный Стрит-Флеш',
   callForThreeOfKind: 'Рекомендуем уравнять ставку, возможное Каре',
   fold: 'Рекомендуем скинуть карты'
 };
@@ -27,16 +29,32 @@ const isAnySuitMoreThanTwo = (pocket, board) => {
        : false;
 };
 
-const findMinGoodSequence = (pocket, board) => { // use some sorting in linear time
+const findMinGoodSequence = (pocket, board, forWhat) => { // use some sorting in linear time
   const ranksArray = Array.from(new Array(RANKS.length), x => x = 0);
 
   [...pocket['cards'], ...board['cards']] // unpack all cards in one array
     .forEach(card => ranksArray[card['rank']] = true); // linear sorting
 
   for (let i = 1; i < ranksArray.length - 1; i++)
-    if (ranksArray[i - 1] && ranksArray[i] && ranksArray[i + 1]) // if there are 3 rank in a row then return true
-      return [RANKS[i - 1], RANKS[i], RANKS[i + 1]]; // return the sequence
+    if (ranksArray[i - 1] && ranksArray[i] && ranksArray[i + 1]) {// if there are 3 rank in a row then return true
+      if (forWhat === 'forFindingSequence') return [RANKS[i - 1], RANKS[i], RANKS[i + 1]]; // return the sequence
+      if (forWhat === 'forFindingStraightFlush') return [i - 1, i, i + 1];
+    }
+  return false;
+};
 
+const checkOnEqualSuits = (pocket, board, sequence) => {
+  const numberOfCurrentSuit = Array.from(new Array(SUITS.length), x => x = 0);
+
+  [...pocket['cards'], ...board['cards']]
+    .forEach(card => { 
+      if (sequence.includes(card['rank'])) 
+        numberOfCurrentSuit[card['suit'] % 10]++
+    });
+  
+  for (let i = 0; i < numberOfCurrentSuit.length; i++) 
+    if (numberOfCurrentSuit[i] === sequence.length) return true; 
+  
   return false;
 };
 
@@ -48,7 +66,7 @@ const findMinGoodSequenceForRaise = (pocket, board) => { // find sequence which 
 
   for (let i = 1; i < ranksArray.length - 2; i++)
     if (ranksArray[i - 1] && ranksArray[i] && ranksArray[i + 1] && ranksArray[i + 2]) // if there are 4 rank in a row then return true
-      return true;
+      return [i - 1, i, i + 1, i + 2]; // return indexes
 
   return false;
 };
@@ -86,6 +104,9 @@ const calculateBetForDecision = (decision, bank, combinationName) => {
     case DECISIONS['absolutelyRaise']:
       return { decision: DECISIONS['absolutelyRaise'] + combinationName, bet: bank };
     
+    case DECISIONS['raiseForStraightFlush']:
+      return { decision: DECISIONS['raiseForStraightFlush'], bet: Math.round((bank * 2) / 3) }; 
+
     case DECISIONS['raiseForStraight']:
       return { decision: DECISIONS['raiseForStraight'], bet: Math.round((bank * 2) / 3) };
     
@@ -101,6 +122,9 @@ const calculateBetForDecision = (decision, bank, combinationName) => {
     case DECISIONS['checkForFlush']:
       return { decision: DECISIONS['checkForFlush'], bet: '-' };
     
+    case DECISIONS['callForStraightFlush']:
+      return { decision: DECISIONS['callForStraightFlush'], bet: '-' };
+
     case DECISIONS['callForThreeOfKind']:
       return { decision: DECISIONS['callForThreeOfKind'], bet: '-' };
     
@@ -134,6 +158,10 @@ const generateDecision = (pocket, board, bank) => {
                                   bank, 
                                   translateCombinationName(highestCombination));
 
+  if (findMinGoodSequenceForRaise(pocket, board) &&
+      checkOnEqualSuits(pocket, board, findMinGoodSequenceForRaise(pocket, board)))
+    return calculateBetForDecision(DECISIONS['raiseForStraightFlush'], bank);                                
+  
   if (findMinGoodSequenceForRaise(pocket, board)) 
     return calculateBetForDecision(DECISIONS['raiseForStraight'], bank);
 
@@ -148,10 +176,13 @@ const generateDecision = (pocket, board, bank) => {
   //
   
   // block of making decisions for call
-  
-  if (findMinGoodSequence(pocket, board) && // if we have min good sequence(3 el) and hand includes one at least
-     (findMinGoodSequence(pocket, board).includes(firstPocketCardRank)
-   || findMinGoodSequence(pocket, board).includes(secondPocketCardRank)))
+  if (findMinGoodSequence(pocket, board, 'forFindingSequence') &&
+      checkOnEqualSuits(pocket, board, findMinGoodSequence(pocket, board, 'forFindingStraightFlush')))
+    return calculateBetForDecision(DECISIONS['callForStraightFlush'], bank);
+
+  if (findMinGoodSequence(pocket, board, 'forFindingSequence') && // if we have min good sequence(3 el) and hand includes one at least
+     (findMinGoodSequence(pocket, board, 'forFindingSequence').includes(firstPocketCardRank)
+   || findMinGoodSequence(pocket, board, 'forFindingSequence').includes(secondPocketCardRank)))
 
     return calculateBetForDecision(DECISIONS['checkForStraight'], bank);
 
@@ -172,7 +203,7 @@ const generateDecision = (pocket, board, bank) => {
   
   // block of making decisions for absolutely fold
   if (!isAnySuitMoreThanTwo(pocket, board)
-   && !findMinGoodSequence(pocket, board)
+   && !findMinGoodSequence(pocket, board, 'forFindingSequence')
    && combination.highestCombination.name === 'kicker') // ???
 
     return calculateBetForDecision(DECISIONS['fold'], bank);
@@ -183,9 +214,9 @@ const generateDecision = (pocket, board, bank) => {
 
     return calculateBetForDecision(DECISIONS['fold'], bank);
 
-  if (findMinGoodSequence(pocket, board) && 
-     !findMinGoodSequence(pocket, board).includes(firstPocketCardRank) &&
-     !findMinGoodSequence(pocket, board).includes(secondPocketCardRank))
+  if (findMinGoodSequence(pocket, board, 'forFindingSequence') && 
+     !findMinGoodSequence(pocket, board, 'forFindingSequence').includes(firstPocketCardRank) &&
+     !findMinGoodSequence(pocket, board, 'forFindingSequence').includes(secondPocketCardRank))
 
     return calculateBetForDecision(DECISIONS['fold'], bank); 
   

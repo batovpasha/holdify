@@ -9,6 +9,7 @@ const DECISIONS = {
   absolutelyRaise: 'Сейчас стоит повысить ставку, 100 % ',
   checkForStraight: 'Рекомендуем уравнять ставку, 31,5 % шанс для Стрита в Ривере',
   checkForFlush: 'Рекомендуем уравнять ставку, 35 % шанс для Флеша в Ривере',
+  callForStraightFlush: 'Рекомендуем уравнять ставку, возможный Стрит-Флеш',
   callForFullHouse: 'Сейчас стоит уравнять ставку, возможный Фулл-хаус',
   call: 'Сейчас стоит уравнять ставку',
   fold: 'Рекомендуем сбросить карты',
@@ -26,6 +27,9 @@ const calculateBetForDecision = (decision, bank, combinationName) => {
     case DECISIONS['checkForFlush']:
       return { decision: DECISIONS['checkForFlush'], bet: Math.round(bank / 2) };
 
+    case DECISIONS['callForStraightFlush']:
+      return { decision: DECISIONS['callForStraightFlush'], bet: '-' };
+
     case DECISIONS['callForFullHouse']:
       return { decision: DECISIONS['callForFullHouse'], bet: '-' };
 
@@ -40,16 +44,34 @@ const calculateBetForDecision = (decision, bank, combinationName) => {
   }
 };
 
-const findMinGoodSequenceForCall = (pocket, board) => { // find sequence which includes 4 elements in row
+const checkOnEqualSuits = (pocket, board, sequence) => {
+  const numberOfCurrentSuit = Array.from(new Array(SUITS.length), x => x = 0);
+
+  [...pocket['cards'], ...board['cards']]
+    .forEach(card => { 
+      if (sequence.includes(card['rank'])) 
+        numberOfCurrentSuit[card['suit'] % 10]++
+    });
+  
+  for (let i = 0; i < numberOfCurrentSuit.length; i++) 
+    if (numberOfCurrentSuit[i] === sequence.length) return true; 
+  
+  return false;
+};
+
+const findMinGoodSequenceForCall = (pocket, board, forWhat) => { // find sequence which includes 4 elements in row
   const ranksArray = Array.from(new Array(RANKS.length), x => x = 0);
   
   [...pocket['cards'], ...board['cards']] // unpack all cards in one array
     .forEach(card => ranksArray[card['rank']] = true); // linear sorting
   
   for (let i = 1; i < ranksArray.length - 2; i++)
-    if (ranksArray[i - 1] && ranksArray[i] && ranksArray[i + 1] && ranksArray[i + 2]) // if there are 4 rank in a row then return true
-      return [RANKS[i - 1], RANKS[i], RANKS[i + 1], RANKS[i + 2]];
-  
+    if (ranksArray[i - 1] && ranksArray[i] && ranksArray[i + 1] && ranksArray[i + 2]) {// if there are 4 rank in a row then return true
+      if (forWhat === 'forFindingSequence') 
+        return [RANKS[i - 1], RANKS[i], RANKS[i + 1], RANKS[i + 2]];
+      if (forWhat === 'forFindingStraightFlush')
+        return [i - 1, i, i + 1, i + 2];
+    }
   return false;
 };
 
@@ -109,9 +131,13 @@ const generateDecision = (pocket, board, bank) => {
                                    translateCombinationName(highestCombination));
 
   // block of making decisions for call and check
-  if (findMinGoodSequenceForCall(pocket, board) &&
-     (findMinGoodSequenceForCall(pocket, board).includes(firstPocketCardRank)
-   || findMinGoodSequenceForCall(pocket, board).includes(secondPocketCardRank))) 
+  if (findMinGoodSequenceForCall(pocket, board, 'forFindingSequence') &&
+      checkOnEqualSuits(pocket, board, findMinGoodSequenceForCall(pocket, board, 'forFindingStraightFlush')))
+    return calculateBetForDecision(DECISIONS['callForStraightFlush'], bank);
+  
+  if (findMinGoodSequenceForCall(pocket, board, 'forFindingSequence') &&
+     (findMinGoodSequenceForCall(pocket, board, 'forFindingSequence').includes(firstPocketCardRank)
+   || findMinGoodSequenceForCall(pocket, board, 'forFindingSequence').includes(secondPocketCardRank))) 
       
     return calculateBetForDecision(DECISIONS['checkForStraight'], bank);
       
@@ -125,9 +151,9 @@ const generateDecision = (pocket, board, bank) => {
   if (combination.highestCombination.name === 'two pairs' && !board.isTwoPairs()) // we have two pairs but not all on board
     return calculateBetForDecision(DECISIONS['callForFullHouse'], bank);
   
-  if (findMinGoodSequenceForCall(pocket, board) &&
-     !findMinGoodSequenceForCall(pocket, board).includes(firstPocketCardRank) &&
-     !findMinGoodSequenceForCall(pocket, board).includes(secondPocketCardRank) &&
+  if (findMinGoodSequenceForCall(pocket, board, 'forFindingSequence') &&
+     !findMinGoodSequenceForCall(pocket, board, 'forFindingSequence').includes(firstPocketCardRank) &&
+     !findMinGoodSequenceForCall(pocket, board, 'forFindingSequence').includes(secondPocketCardRank) &&
      pocket.isPair())
     return calculateBetForDecision(DECISIONS['call'], bank);
   
@@ -142,9 +168,9 @@ const generateDecision = (pocket, board, bank) => {
    
     return calculateBetForDecision(DECISIONS['callForThreeOfKind'], bank);
   // block of making decisions for absolutely fold
-  if (findMinGoodSequenceForCall(pocket, board) &&
-     !findMinGoodSequenceForCall(pocket, board).includes(firstPocketCardRank) &&
-     !findMinGoodSequenceForCall(pocket, board).includes(secondPocketCardRank))
+  if (findMinGoodSequenceForCall(pocket, board, 'forFindingSequence') &&
+     !findMinGoodSequenceForCall(pocket, board, 'forFindingSequence').includes(firstPocketCardRank) &&
+     !findMinGoodSequenceForCall(pocket, board, 'forFindingSequence').includes(secondPocketCardRank))
     return calculateBetForDecision(DECISIONS['fold'], bank);
 
   if (isAnySuitMoreThanThree(pocket, board) &&
