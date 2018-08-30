@@ -27,16 +27,16 @@ const calculateBetForDecision = (decision, bank, combinationName) => {
       return { decision: DECISIONS['checkForFlush'], bet: Math.round(bank / 2) };
 
     case DECISIONS['callForFullHouse']:
-      return { decision: DECISIONS['callForFullHouse'], bet: null };
+      return { decision: DECISIONS['callForFullHouse'], bet: '-' };
 
     case DECISIONS['call']:
-      return { decision: DECISIONS['call'], bet: null };
+      return { decision: DECISIONS['call'], bet: '-' };
     
     case DECISIONS['fold']:
-      return { decision: DECISIONS['fold'], bet: null };
+      return { decision: DECISIONS['fold'], bet: '-' };
     
     case DECISIONS['callForThreeOfKind']:
-      return { decision: DECISIONS['callForFullHouse'], bet: null };
+      return { decision: DECISIONS['callForFullHouse'], bet: '-' };
   }
 };
 

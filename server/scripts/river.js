@@ -45,10 +45,10 @@ const calculateBetForDecision = (decision, bank, combinationName) => {
       return { decision: DECISIONS['raise'], bet : (bank * 2) / 3 };
 
     case DECISIONS['call']:
-      return { decision: DECISIONS['call'], bet : null };
+      return { decision: DECISIONS['call'], bet : '-' };
     
     case DECISIONS['fold']:
-      return { decision: DECISIONS['fold'], bet : null };
+      return { decision: DECISIONS['fold'], bet : '-' };
   }
 };
 

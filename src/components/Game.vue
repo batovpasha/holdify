@@ -38,7 +38,7 @@
         <div class="field-left">
           Ставка
         </div>
-        <input class="field-right" type="text" name="" ref="bet" value="">
+        <div class="field-right">{{bet}}</div>
       </div>
     </div>
 
@@ -75,6 +75,7 @@ export default {
       advice: 'Укажите карты и банк',
       counter: 0,
       bank: '',
+      bet: '',
       duplicate: false,
       btn_availability: false,
       rounds: ['Preflop', 'Flop', 'Turn', 'River'],
@@ -114,11 +115,14 @@ export default {
 
       this.data = {
         bank: this.$refs.bank.value,
-        bet: this.$refs.bet.value,
         hand_cards: this.hand_cards,
         table_cards: this.table_cards
       }
-      this.axios.post('/game', this.data).then(response => { this.advice = response.data })
+      this.axios.post('/game', this.data).then(response => {
+        this.advice = response.data.decision
+        this.bet = response.data.bet 
+        // + ' ' + response.data.bet
+        })
     },
     send_round_data () {
       // describes the game process
@@ -316,6 +320,7 @@ export default {
         height: 5vw
         float: left
       &-right
+        line-height: 5vw
         width: 14vw
         background: #7f4467
         height: 5vw
