@@ -26,13 +26,14 @@ export default {
   },
   data () {
     return {
-    
+
     }
   },
   methods: {
-      go_back () {
-          this.$parent.rule_visibility = false
-      }
+    go_back () {
+      this.$parent.rule_visibility = false
+      this.$root.rule_counter++
+    }
   }
 }
 </script>
@@ -73,6 +74,7 @@ export default {
             text-align: left
             margin-left: 2%
             font-size: 0.9vw
+            font-family: 'Raleway', sans-serif
         .button
             color: white
             margin: auto

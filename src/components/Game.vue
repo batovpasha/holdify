@@ -96,12 +96,13 @@ export default {
   },
   created () {
     this.validation()
+    if (this.$root.rule_counter >= 1) this.rule_visibility = false
   },
   updated () {
 
   },
   methods: {
-    //  create a request that returns an object with such fields as: bank, bet, hand cards and table cards
+    //  create a request that returns an object with such fields as: bank, hand cards and table cards
     create_request () {
       this.hand_cards = []
       this.table_cards = []
@@ -124,9 +125,8 @@ export default {
       }
       this.axios.post('/game', this.data).then(response => {
         this.advice = response.data.decision
-        this.bet = response.data.bet 
-        // + ' ' + response.data.bet
-        })
+        this.bet = response.data.bet
+      })
     },
     send_round_data () {
       // describes the game process
@@ -246,24 +246,24 @@ export default {
           margin-left: 5%
           z-index: 3
           &-active
-            border: 5px solid #6dc5af
+            border: 0.3vw solid #6dc5af
           &:hover
             transform: scale(1.1)
       .deck-cards
         height: 10vw
-        margin-left: 10%
+        margin-left: 4vw
         margin-top: 3%
         .card-field-deck
           width: 7vw
           height: 10vw
           display: block
           position: relative
-          margin-left: 2%
+          margin-left: 1vw
           z-index: 3
           cursor: pointer
           border-radius: 15%
           &-active
-            border: 3px solid #6dc5af
+            border: 0.3vw solid #6dc5af
             &:hover
               transform: scale(1.1)
       .title
@@ -385,5 +385,19 @@ export default {
 
   .fade-enter, .fade-leave-to
     opacity: 0
+
+@media only screen and (max-width : 480px)
+  .main
+    .cards
+      .deck
+        .deck-cards
+          .card-field-deck
+            margin-left: 0.25vw
+    .bets
+      .field
+        &:nth-child(1)
+          margin-left: 15vw
+        &:nth-child(2)
+          margin-right: 10vw
 
 </style>
