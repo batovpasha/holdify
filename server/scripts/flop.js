@@ -79,7 +79,7 @@ const translateCombinationName = (name) => {
     case 'straight flush':
       return 'Стрит-Флеш';  
   }
-}
+};
 
 const calculateBetForDecision = (decision, bank, combinationName) => {
   switch(decision) {
