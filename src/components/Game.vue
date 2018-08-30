@@ -1,6 +1,7 @@
 <template>
   <div class="main">
     <PopUp @send_data="parser" v-if="form_visibility"/>
+    <Rules v-if="rule_visibility"/>
     <transition name="fade">
       <WarningPopUp v-if="this.duplicate"/>
     </transition>
@@ -60,16 +61,19 @@
 import Card from '@/components/Card'
 import CardField from '@/components/CardField'
 import PopUp from '@/components/PopUp'
+import Rules from '@/components/Rules'
 export default {
   name: 'Preloader',
   components: {
     Card,
     PopUp,
-    CardField
+    CardField,
+    Rules
   },
   data () {
     return {
       form_visibility: false,
+      rule_visibility: true,
       temp_id: -1,
       name_of_round: 'Preflop',
       advice: 'Укажите карты и банк',
