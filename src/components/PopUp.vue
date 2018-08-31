@@ -174,4 +174,25 @@ export default {
           cursor: pointer
         &-active
           background: #cecece
+
+@media only screen and (max-width : 768px)
+  .main
+    .form
+      width: 80vw
+      height: 46vw
+      left: 10%
+      .title
+        h2
+          font-size: 4vw
+          height: 8vw
+          line-height: 5vw
+      .cards
+        margin-top: 2vw
+        .card
+          width: 9vw
+      .dots
+        bottom: 3vw
+        .dot
+          width: 4vw
+          height: 4vw
 </style>

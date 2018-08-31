@@ -400,4 +400,58 @@ export default {
         &:nth-child(2)
           margin-right: 10vw
 
+@media only screen and (max-width : 768px)
+  .main
+    .cards
+      .hand, .deck
+        .deck-cards
+          .card-field-deck
+            width: 13vw
+            height: 16vw
+            margin-top: 3%
+            &:nth-child(4)
+              margin-left: 8vw
+  .main
+    .cards
+      .hand
+        .hand-cards
+          margin-left: 17%
+          .card-field-hand
+            width: 13vw
+            height: 16vw
+    .bets
+      .field
+        &:nth-child(1)
+          margin-right: 0vw
+          margin-left: 7vw
+        &:nth-child(2)
+          margin-left: 5vw
+          margin-right: 0vw
+        &-left
+          width: 17vw
+          line-height: 10vw
+          font-size: 3vw
+          height: 10vw
+        &-right
+          width: 20vw
+          height: 10vw
+          font-size: 4vw
+    .footer
+      height: 30vw
+      h2
+        font-size: 5vw
+        margin-top: 5%
+      p
+        font-size: 3.5vw
+      .button
+        width: 16vw
+        height: 16vw
+        &-reset
+          top: -25%
+        &-success
+          top: -25%
+        img
+          width: 8vw
+          margin-top: 25%
+
 </style>
