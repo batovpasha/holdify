@@ -18,7 +18,9 @@
     "vue-axios": "^2.1.3",
     "vue-router": "^3.0.1",
     "express": "*",
-    "body-parser": "*"
+    "body-parser": "*",
+    "cors": "*",
+    "serve-static": "*"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
