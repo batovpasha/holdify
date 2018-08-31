@@ -8,7 +8,7 @@
   "homepage": "https://github.com/fluoxe7ine/holdify",
   "scripts": {
     "build": "node build/build.js",
-    "start": "node server.js",
+    "start": "node server.js"
   },
   "dependencies": {
     "bootstrap": "^4.1.3",
