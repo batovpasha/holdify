@@ -10,7 +10,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(serveStatic(__dirname + "/dist"));
 
-app.listen(3000, () => {
+const port = 8000;
+
+app.listen(process.env.PORT || port, () => {
   console.log('Server starts correctly');
 });
 
@@ -18,6 +20,6 @@ app.post('/game', (req, res) => {
   let bank  = req.body.bank;
   let pocket_cards = req.body.hand_cards;
   let board_cards = req.body.table_cards;
-  
+
   res.send(cards_parser.createCards(pocket_cards, board_cards, bank));
 });
