@@ -7,7 +7,7 @@
   "proxy": "http://localhost:3000",
   "homepage": "https://github.com/fluoxe7ine/holdify",
   "scripts": {
-    "start": "node server.js",
+    "start": "node server.js"
   },
   "dependencies": {
     "bootstrap": "^4.1.3",
