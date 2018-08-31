@@ -435,7 +435,8 @@ export default {
         &-right
           width: 20vw
           height: 10vw
-          font-size: 4vw
+          font-size: 3vw
+          line-height: 10vw
     .footer
       height: 30vw
       h2

@@ -114,4 +114,19 @@ export default {
 
 .fade-enter, .fade-leave-to
   opacity: 0
+
+@media only screen and (max-width : 768px)
+  .main
+    .title
+      height: 40vw
+      h1
+        font-size: 14vw
+        margin-top: 10%
+        &:before
+          width: 15vw
+          height: 12vw
+          left:   7%
+          top: 25%
+      p
+        font-size: 4vw
 </style>

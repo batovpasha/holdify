@@ -91,4 +91,27 @@ export default {
             &:hover
                 color: black
                 background: rgba(255, 255, 255, .7)
+@media only screen and (max-width : 768px)
+  .main
+    .form
+      width: 80vw
+      height: 50vw
+      left: 10%
+      h2
+        font-size: 5vw
+        height: 10vw
+        line-height: 8vw
+      p
+        font-size: 2vw
+      .button
+        width: 20vw
+        height: 6vw
+        font-size: 2vw
+        line-height: 6vw
+
+@media only screen and (max-width : 480px)
+  .main
+    .form
+      width: 80vw
+      height: 60vw
 </style>
