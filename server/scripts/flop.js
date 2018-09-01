@@ -179,11 +179,7 @@ const generateDecision = (pocket, board, bank) => {
   const firstPocketCardRank = RANKS[pocket['cards'][0]['rank']];
   const secondPocketCardRank = RANKS[pocket['cards'][1]['rank']];
   
-  // block of making decisions for absolutely fold
-
-  if (board.isThreeOfKind() && !pocket.isPair())
-    return calculateBetForDecision(DECISIONS['fold'], bank);
-  
+  // block of making decisions for absolutely fold  
   if (findMinGoodSequence(pocket, board, 'forFindingSequence') &&
       checkOnEqualSuits(pocket, board, findMinGoodSequence(pocket, board, 'forFindingStraightFlush')) &&
       !findMinGoodSequence(pocket, board, 'forFindingSequence')
@@ -269,6 +265,9 @@ const generateDecision = (pocket, board, bank) => {
 
     return calculateBetForDecision(DECISIONS['fold'], bank); 
   
+  if (board.isThreeOfKind() && !pocket.isPair())
+    return calculateBetForDecision(DECISIONS['fold'], bank);
+
   if (board.isThreeOfKind())
     return calculateBetForDecision(DECISIONS['fold'], bank);
   
