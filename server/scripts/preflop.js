@@ -18,16 +18,28 @@ const DECISIONS = {
 const calculateBetForDecision = (decision, bank) => {
   switch(decision) {
     case DECISIONS['raise']:
-      return { decision: DECISIONS['raise'], bet: Math.round((bank * 2) / 3) };
+      return { 
+                decision: DECISIONS['raise'], 
+                bet: Math.round((bank * 2) / 3) 
+              };
     
     case DECISIONS['call']:
-      return { decision: DECISIONS['call'], bet: '-' };
+      return { 
+                decision: DECISIONS['call'], 
+                bet: '-' 
+              };
 
     case DECISIONS['check']:
-      return { decision: DECISIONS['check'], bet: '-' };
+      return { 
+                decision: DECISIONS['check'], 
+                bet: '-' 
+              };
 
     case DECISIONS['fold']:
-      return { decision: DECISIONS['fold'], bet: '-' };  
+      return { 
+                decision: DECISIONS['fold'], 
+                bet: '-' 
+              };  
   }
 };
 

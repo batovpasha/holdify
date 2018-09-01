@@ -51,16 +51,28 @@ const findFlush = (pocket, board) => {
 const calculateBetForDecision = (decision, bank, combinationName) => {
   switch(decision) {
     case DECISIONS['absolutelyRaise']:
-      return { decision: DECISIONS['absolutelyRaise'] + combinationName, bet: bank };
+      return { 
+                decision: DECISIONS['absolutelyRaise'] + combinationName, 
+                bet: bank 
+              };
     
     case DECISIONS['raise']:
-      return { decision: DECISIONS['raise'], bet : Math.round((bank * 2) / 3) };
+      return { 
+                decision: DECISIONS['raise'], 
+                bet : Math.round((bank * 2) / 3) 
+              };
 
     case DECISIONS['call']:
-      return { decision: DECISIONS['call'], bet : '-' };
+      return { 
+                decision: DECISIONS['call'], 
+                bet : '-' 
+              };
     
     case DECISIONS['fold']:
-      return { decision: DECISIONS['fold'], bet : '-' };
+      return { 
+                decision: DECISIONS['fold'], 
+                bet : '-' 
+              };
   }
 };
 

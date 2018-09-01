@@ -19,28 +19,52 @@ const DECISIONS = {
 const calculateBetForDecision = (decision, bank, combinationName) => {
   switch(decision) {
     case DECISIONS['absolutelyRaise']:
-      return { decision: DECISIONS['absolutelyRaise'] + combinationName, bet: bank };
+      return { 
+                decision: DECISIONS['absolutelyRaise'] + combinationName, 
+                bet: bank 
+              };
     
     case DECISIONS['checkForStraight']:
-      return { decision: DECISIONS['checkForStraight'], bet: Math.round(bank / 2) };
+      return { 
+                decision: DECISIONS['checkForStraight'], 
+                bet: Math.round(bank / 2) 
+              };
     
     case DECISIONS['checkForFlush']:
-      return { decision: DECISIONS['checkForFlush'], bet: Math.round(bank / 2) };
+      return { 
+                decision: DECISIONS['checkForFlush'], 
+                bet: Math.round(bank / 2) 
+              };
 
     case DECISIONS['callForStraightFlush']:
-      return { decision: DECISIONS['callForStraightFlush'], bet: '-' };
+      return { 
+                decision: DECISIONS['callForStraightFlush'], 
+                bet: '-' 
+              };
 
     case DECISIONS['callForFullHouse']:
-      return { decision: DECISIONS['callForFullHouse'], bet: '-' };
+      return { 
+                decision: DECISIONS['callForFullHouse'], 
+                bet: '-' 
+              };
 
     case DECISIONS['call']:
-      return { decision: DECISIONS['call'], bet: '-' };
+      return { 
+                decision: DECISIONS['call'], 
+                bet: '-' 
+              };
     
     case DECISIONS['fold']:
-      return { decision: DECISIONS['fold'], bet: '-' };
+      return { 
+                decision: DECISIONS['fold'], 
+                bet: '-' 
+              };
     
     case DECISIONS['callForThreeOfKind']:
-      return { decision: DECISIONS['callForFullHouse'], bet: '-' };
+      return { 
+                decision: DECISIONS['callForFullHouse'], 
+                bet: '-' 
+              };
   }
 };
 
