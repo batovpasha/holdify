@@ -31,7 +31,8 @@ const findStraight = (pocket, board) => {
     .forEach(card => ranksArray[card['rank']] = true); // linear sorting
     
   for (let i = 1; i < ranksArray.length - 3; i++)
-    if (ranksArray[i - 1] && ranksArray[i] && ranksArray[i + 1] && ranksArray[i + 2] && ranksArray[i + 3]) // if there are 5 rank in a row then return true
+    if (ranksArray[i - 1] && ranksArray[i] && 
+        ranksArray[i + 1] && ranksArray[i + 2] && ranksArray[i + 3]) // if there are 5 rank in a row then return true
       return [RANKS[i - 1], RANKS[i], RANKS[i + 1], RANKS[i + 2], RANKS[i + 3]];
     
   return false;

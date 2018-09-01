@@ -226,8 +226,10 @@ const generateDecision = (pocket, board, bank) => {
     return calculateBetForDecision(DECISIONS['callForStraightFlush'], bank);
 
   if (findMinGoodSequence(pocket, board, 'forFindingSequence') && // if we have min good sequence(3 el) and hand includes one at least
-     (findMinGoodSequence(pocket, board, 'forFindingSequence').includes(firstPocketCardRank)
-   || findMinGoodSequence(pocket, board, 'forFindingSequence').includes(secondPocketCardRank)))
+     (findMinGoodSequence(pocket, board, 'forFindingSequence')
+        .includes(firstPocketCardRank) || 
+      findMinGoodSequence(pocket, board, 'forFindingSequence')
+        .includes(secondPocketCardRank)))
 
     return calculateBetForDecision(DECISIONS['checkForStraight'], bank);
 
@@ -260,8 +262,10 @@ const generateDecision = (pocket, board, bank) => {
     return calculateBetForDecision(DECISIONS['fold'], bank);
 
   if (findMinGoodSequence(pocket, board, 'forFindingSequence') && 
-     !findMinGoodSequence(pocket, board, 'forFindingSequence').includes(firstPocketCardRank) &&
-     !findMinGoodSequence(pocket, board, 'forFindingSequence').includes(secondPocketCardRank))
+     !findMinGoodSequence(pocket, board, 'forFindingSequence')
+       .includes(firstPocketCardRank) &&
+     !findMinGoodSequence(pocket, board, 'forFindingSequence')
+       .includes(secondPocketCardRank))
 
     return calculateBetForDecision(DECISIONS['fold'], bank); 
   
