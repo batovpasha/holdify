@@ -37,8 +37,12 @@ const findMinGoodSequence = (pocket, board, forWhat) => { // use some sorting in
 
   for (let i = 1; i < ranksArray.length - 1; i++)
     if (ranksArray[i - 1] && ranksArray[i] && ranksArray[i + 1]) {// if there are 3 rank in a row then return true
-      if (forWhat === 'forFindingSequence') return [RANKS[i - 1], RANKS[i], RANKS[i + 1]]; // return the sequence
-      if (forWhat === 'forFindingStraightFlush') return [i - 1, i, i + 1];
+      
+      if (forWhat === 'forFindingSequence') 
+        return [RANKS[i - 1], RANKS[i], RANKS[i + 1]]; // return the sequence
+      
+      if (forWhat === 'forFindingStraightFlush') 
+        return [i - 1, i, i + 1];
     }
   return false;
 };
@@ -65,9 +69,11 @@ const findMinGoodSequenceForRaise = (pocket, board) => { // find sequence which 
     .forEach(card => ranksArray[card['rank']] = true); // linear sorting
 
   for (let i = 1; i < ranksArray.length - 2; i++)
-    if (ranksArray[i - 1] && ranksArray[i] && ranksArray[i + 1] && ranksArray[i + 2]) // if there are 4 rank in a row then return true
+    if (ranksArray[i - 1] && ranksArray[i] && 
+        ranksArray[i + 1] && ranksArray[i + 2]) { // if there are 4 rank in a row then return true
       return [i - 1, i, i + 1, i + 2]; // return indexes
-
+    }
+  
   return false;
 };
 
@@ -147,6 +153,15 @@ const generateDecision = (pocket, board, bank) => {
 
   if (board.isThreeOfKind() && !pocket.isPair())
     return calculateBetForDecision(DECISIONS['fold'], bank);
+  
+  if (findMinGoodSequence(pocket, board, 'forFindingSequence') &&
+      checkOnEqualSuits(pocket, board, findMinGoodSequence(pocket, board, 'forFindingStraightFlush')) &&
+      !findMinGoodSequence(pocket, board, 'forFindingSequence')
+        .includes(firstPocketCardRank) &&
+      !findMinGoodSequence(pocket, board, 'forFindingSequence')
+        .includes(secondPocketCardRank))
+    return calculateBetForDecision(DECISIONS['fold'], bank);
+  
   // block of making decisions for raise
   if (combination.highestCombination.name === 'straight'
    || combination.highestCombination.name === 'flush'
@@ -154,15 +169,15 @@ const generateDecision = (pocket, board, bank) => {
    || combination.highestCombination.name === 'four of a kind'
    || combination.highestCombination.name === 'straight flush')
 
-   return calculateBetForDecision(DECISIONS['absolutelyRaise'], 
+    return calculateBetForDecision(DECISIONS['absolutelyRaise'], 
                                   bank, 
                                   translateCombinationName(highestCombination));
 
-  if (findMinGoodSequenceForRaise(pocket, board) &&
-      checkOnEqualSuits(pocket, board, findMinGoodSequenceForRaise(pocket, board)))
+  if (findMinGoodSequenceForRaise(pocket, board, 'findingSequence') &&
+      checkOnEqualSuits(pocket, board, findMinGoodSequenceForRaise(pocket, board, 'findingSequence')))
     return calculateBetForDecision(DECISIONS['raiseForStraightFlush'], bank);                                
   
-  if (findMinGoodSequenceForRaise(pocket, board)) 
+  if (findMinGoodSequenceForRaise(pocket, board, 'findingSequence')) 
     return calculateBetForDecision(DECISIONS['raiseForStraight'], bank);
 
   if (isAnySuitMoreThanThree(pocket, board))
